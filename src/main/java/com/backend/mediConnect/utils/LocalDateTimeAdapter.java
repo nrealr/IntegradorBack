@@ -1,4 +1,4 @@
-package com.backend.proyecto.utils;
+package com.backend.mediConnect.utils;
 
 import com.google.gson.*;
 

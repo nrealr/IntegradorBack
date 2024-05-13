@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.backend</groupId>
-	<artifactId>proyecto</artifactId>
+	<artifactId>mediConnect</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>proyecto</name>
+	<name>mediConnect</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
 		<java.version>17</java.version>

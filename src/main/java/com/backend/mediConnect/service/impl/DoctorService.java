@@ -1,13 +1,13 @@
-package com.backend.proyecto.service.impl;
+package com.backend.mediConnect.service.impl;
 
-import com.backend.proyecto.dto.input.DoctorInputDto;
-import com.backend.proyecto.dto.output.DoctorOutputDto;
-import com.backend.proyecto.dto.update.DoctorUpdateDto;
-import com.backend.proyecto.entity.Doctor;
-import com.backend.proyecto.exceptions.ResourceNotFoundException;
-import com.backend.proyecto.repository.DoctorRepository;
-import com.backend.proyecto.service.IDoctorService;
-import com.backend.proyecto.utils.JsonPrinter;
+import com.backend.mediConnect.dto.input.DoctorInputDto;
+import com.backend.mediConnect.dto.output.DoctorOutputDto;
+import com.backend.mediConnect.dto.update.DoctorUpdateDto;
+import com.backend.mediConnect.entity.Doctor;
+import com.backend.mediConnect.exceptions.ResourceNotFoundException;
+import com.backend.mediConnect.repository.DoctorRepository;
+import com.backend.mediConnect.service.IDoctorService;
+import com.backend.mediConnect.utils.JsonPrinter;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +26,7 @@ public class DoctorService implements IDoctorService {
         this.doctorRepository = doctorRepository;
         this.modelMapper = modelMapper;
     }
+
 
     @Override
     public DoctorOutputDto registerDoctor(DoctorInputDto doctor) {

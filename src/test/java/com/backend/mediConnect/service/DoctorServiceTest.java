@@ -1,13 +1,12 @@
-package com.backend.proyecto.service;
+package com.backend.mediConnect.service;
 
-import com.backend.proyecto.dto.input.DoctorInputDto;
-import com.backend.proyecto.dto.output.DoctorOutputDto;
+import com.backend.mediConnect.dto.input.DoctorInputDto;
+import com.backend.mediConnect.dto.output.DoctorOutputDto;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import java.util.List;
-import static org.junit.Assert.*;
 
 @SpringBootTest
 public class DoctorServiceTest {
@@ -17,7 +16,7 @@ public class DoctorServiceTest {
 
     @Test
     public void shouldAddADoctor(){
-        DoctorInputDto doctor = new DoctorInputDto("Pedro", "Pérez", "12348678-9", "https://images.app.goo.gl/Db6AwF3fVSHsSsWz9", "General Practice doctor");
+        DoctorInputDto doctor = new DoctorInputDto("Pedro", "Pérez", "6855226-9", "https://images.app.goo.gl/Db6AwF3fVSHsSsWz9", "General Practice doctor");
 
         DoctorOutputDto doctorAdded = doctorService.registerDoctor(doctor);
 

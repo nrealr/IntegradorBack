@@ -1,4 +1,4 @@
-package com.backend.proyecto.dto.output;
+package com.backend.mediConnect.dto.output;
 
 public class DoctorOutputDto {
 
@@ -6,7 +6,7 @@ public class DoctorOutputDto {
     private String name;
     private String lastname;
     private String rut;
-    private String image;
+    private String img;
     private String description;
 
     public DoctorOutputDto() {
@@ -17,7 +17,7 @@ public class DoctorOutputDto {
         this.id = id;
         this.lastname = lastname;
         this.rut = rut;
-        this.image = image;
+        this.img = image;
         this.description = description;
     }
 
@@ -53,12 +53,12 @@ public class DoctorOutputDto {
         this.rut = rut;
     }
 
-    public String getImage() {
-        return image;
+    public String getImg() {
+        return img;
     }
 
-    public void setImage(String image) {
-        this.image = image;
+    public void setImg(String img) {
+        this.img = img;
     }
 
     public String getDescription() {
@@ -76,7 +76,7 @@ public class DoctorOutputDto {
                 ", name='" + name + '\'' +
                 ", lastname='" + lastname + '\'' +
                 ", rut='" + rut + '\'' +
-                ", image='" + image + '\'' +
+                ", img='" + img + '\'' +
                 ", description='" + description + '\'' +
                 '}';
     }

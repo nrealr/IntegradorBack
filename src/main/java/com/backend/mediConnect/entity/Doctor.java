@@ -1,4 +1,4 @@
-package com.backend.proyecto.entity;
+package com.backend.mediConnect.entity;
 import jakarta.persistence.*;
 
 @Entity
@@ -20,7 +20,7 @@ public class Doctor {
     private String rut;
 
     @Column(length = 500)
-    private String image;
+    private String img;
 
     @Column(length = 500)
     private String description;
@@ -28,12 +28,12 @@ public class Doctor {
     public Doctor() {
     }
 
-    public Doctor(Long id, String name, String lastname, String rut, String image, String description) {
+    public Doctor(Long id, String name, String lastname, String rut, String img, String description) {
         this.id = id;
         this.name = name;
         this.lastname = lastname;
         this.rut = rut;
-        this.image = image;
+        this.img = img;
         this.description = description;
     }
 
@@ -69,12 +69,12 @@ public class Doctor {
         this.rut = rut;
     }
 
-    public String getImage() {
-        return image;
+    public String getImg() {
+        return img;
     }
 
-    public void setImage(String image) {
-        this.image = image;
+    public void setImg(String img) {
+        this.img = img;
     }
 
     public String getDescription() {
@@ -92,7 +92,7 @@ public class Doctor {
                 ", name='" + name + '\'' +
                 ", lastname='" + lastname + '\'' +
                 ", rut='" + rut + '\'' +
-                ", image='" + image + '\'' +
+                ", img='" + img + '\'' +
                 ", description='" + description + '\'' +
                 '}';
     }

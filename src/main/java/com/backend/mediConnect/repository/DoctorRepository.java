@@ -1,6 +1,6 @@
-package com.backend.proyecto.repository;
+package com.backend.mediConnect.repository;
 
-import com.backend.proyecto.entity.Doctor;
+import com.backend.mediConnect.entity.Doctor;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

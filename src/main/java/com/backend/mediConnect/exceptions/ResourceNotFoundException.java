@@ -1,4 +1,4 @@
-package com.backend.proyecto.exceptions;
+package com.backend.mediConnect.exceptions;
 
 public class ResourceNotFoundException extends Exception{
     public ResourceNotFoundException(String message){

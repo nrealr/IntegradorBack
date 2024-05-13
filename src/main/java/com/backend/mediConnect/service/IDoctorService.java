@@ -1,9 +1,9 @@
-package com.backend.proyecto.service;
+package com.backend.mediConnect.service;
 
-import com.backend.proyecto.dto.input.DoctorInputDto;
-import com.backend.proyecto.dto.update.DoctorUpdateDto;
-import com.backend.proyecto.dto.output.DoctorOutputDto;
-import com.backend.proyecto.exceptions.ResourceNotFoundException;
+import com.backend.mediConnect.dto.input.DoctorInputDto;
+import com.backend.mediConnect.dto.update.DoctorUpdateDto;
+import com.backend.mediConnect.dto.output.DoctorOutputDto;
+import com.backend.mediConnect.exceptions.ResourceNotFoundException;
 
 import java.util.List;
 

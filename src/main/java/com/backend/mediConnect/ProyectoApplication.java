@@ -1,4 +1,4 @@
-package com.backend.proyecto;
+package com.backend.mediConnect;
 
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;

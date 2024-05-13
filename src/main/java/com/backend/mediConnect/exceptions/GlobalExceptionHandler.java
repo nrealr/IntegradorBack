@@ -1,4 +1,4 @@
-package com.backend.proyecto.exceptions;
+package com.backend.mediConnect.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;

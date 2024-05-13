@@ -1,13 +1,14 @@
-package com.backend.proyecto.controller;
-import com.backend.proyecto.dto.input.DoctorInputDto;
-import com.backend.proyecto.dto.output.DoctorOutputDto;
-import com.backend.proyecto.service.impl.DoctorService;
+package com.backend.mediConnect.controller;
+import com.backend.mediConnect.dto.input.DoctorInputDto;
+import com.backend.mediConnect.dto.output.DoctorOutputDto;
+import com.backend.mediConnect.service.impl.DoctorService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import jakarta.validation.Valid;
 import java.util.List;
+
 
 @CrossOrigin(origins = "*")
 @RestController

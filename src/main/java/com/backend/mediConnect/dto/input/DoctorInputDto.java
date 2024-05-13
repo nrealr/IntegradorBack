@@ -1,4 +1,4 @@
-package com.backend.proyecto.dto.input;
+package com.backend.mediConnect.dto.input;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.validation.constraints.*;
@@ -27,7 +27,7 @@ public class DoctorInputDto {
 
     @NotNull(message = "image field cannot be null")
     @NotBlank(message = "image field cannot be blank")
-    private String image;
+    private String img;
 
     @NotNull(message = "Description field cannot be null")
     @NotBlank(message = "Description field cannot be blank")
@@ -37,11 +37,11 @@ public class DoctorInputDto {
     public DoctorInputDto() {
     }
 
-    public DoctorInputDto(String name, String lastname, String rut, String image, String description) {
+    public DoctorInputDto(String name, String lastname, String rut, String img, String description) {
         this.name = name;
         this.lastname = lastname;
         this.rut = rut;
-        this.image = image;
+        this.img = img;
         this.description = description;
     }
 
@@ -69,12 +69,12 @@ public class DoctorInputDto {
         this.rut = rut;
     }
 
-    public String getImage() {
-        return image;
+    public String getImg() {
+        return img;
     }
 
-    public void setImage(String image) {
-        this.image = image;
+    public void setImg(String img) {
+        this.img = img;
     }
 
     public String getDescription() {
