@@ -29,4 +29,9 @@ public class DoctorController {
     public ResponseEntity<List<DoctorOutputDto>> listDoctors(){
         return new ResponseEntity<>(doctorService.listDoctors(), HttpStatus.OK);
     }
+
+    @GetMapping("{id}")
+    public ResponseEntity<DoctorOutputDto> findDoctorById(@PathVariable Long id) {
+        return new ResponseEntity<>(doctorService.findDoctorById(id), HttpStatus.OK);
+    }
 }

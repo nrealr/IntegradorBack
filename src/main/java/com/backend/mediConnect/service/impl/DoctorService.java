@@ -58,7 +58,18 @@ public class DoctorService implements IDoctorService {
 
     @Override
     public DoctorOutputDto findDoctorById(Long id) {
-        return null;
+
+        Doctor doctorSearched = doctorRepository.findById(id).orElse(null);
+        DoctorOutputDto doctorFound = null;
+
+        if (doctorSearched != null){
+            doctorFound = modelMapper.map(doctorSearched, DoctorOutputDto.class);
+            LOGGER.info("Doctor found: {}", JsonPrinter.toString(doctorFound));
+        } else {
+            LOGGER.error("The id is not registered on the database.");
+        }
+        return doctorFound;
+
     }
 
     @Override
