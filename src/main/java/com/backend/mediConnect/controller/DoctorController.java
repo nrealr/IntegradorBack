@@ -1,6 +1,7 @@
 package com.backend.mediConnect.controller;
 import com.backend.mediConnect.dto.input.DoctorInputDto;
 import com.backend.mediConnect.dto.output.DoctorOutputDto;
+import com.backend.mediConnect.exceptions.ResourceNotFoundException;
 import com.backend.mediConnect.service.impl.DoctorService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,5 +34,11 @@ public class DoctorController {
     @GetMapping("{id}")
     public ResponseEntity<DoctorOutputDto> findDoctorById(@PathVariable Long id) {
         return new ResponseEntity<>(doctorService.findDoctorById(id), HttpStatus.OK);
+    }
+
+    @DeleteMapping("delete/{id}")
+    public ResponseEntity<?> deleteDoctor(@PathVariable Long id) throws ResourceNotFoundException {
+        doctorService.deleteDoctor(id);
+        return new ResponseEntity<>("Doctor successfully deleted", HttpStatus.NO_CONTENT);
     }
 }

@@ -80,5 +80,12 @@ public class DoctorService implements IDoctorService {
     @Override
     public void deleteDoctor(Long id) throws ResourceNotFoundException {
 
+        if (doctorRepository.findById(id).orElse(null) != null){
+            doctorRepository.deleteById(id);
+            LOGGER.warn("Doctor with id {} was deleted", id);
+        }else {
+            LOGGER.error("Couldn't find doctor with id {}", id);
+            throw new ResourceNotFoundException("Couldn't find doctor with id " + id);
+        }
     }
 }
