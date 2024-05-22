@@ -9,16 +9,19 @@ public class DoctorOutputDto {
     private String img;
     private String description;
 
+    private SpecialtyOutputDto specialty;
+
     public DoctorOutputDto() {
     }
 
-    public DoctorOutputDto(String name, Long id, String lastname, String rut, String image, String description) {
-        this.name = name;
+    public DoctorOutputDto(Long id, String name, String lastname, String rut, String img, String description, SpecialtyOutputDto specialty) {
         this.id = id;
+        this.name = name;
         this.lastname = lastname;
         this.rut = rut;
-        this.img = image;
+        this.img = img;
         this.description = description;
+        this.specialty = specialty;
     }
 
     public Long getId() {
@@ -69,6 +72,14 @@ public class DoctorOutputDto {
         this.description = description;
     }
 
+    public SpecialtyOutputDto getSpecialty() {
+        return specialty;
+    }
+
+    public void setSpecialty(SpecialtyOutputDto specialty) {
+        this.specialty = specialty;
+    }
+
     @Override
     public String toString() {
         return "DoctorOutputDto{" +
@@ -78,6 +89,7 @@ public class DoctorOutputDto {
                 ", rut='" + rut + '\'' +
                 ", img='" + img + '\'' +
                 ", description='" + description + '\'' +
+                ", specialty ='" + specialty + '\'' +
                 '}';
     }
 }

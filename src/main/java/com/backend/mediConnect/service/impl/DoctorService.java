@@ -1,15 +1,20 @@
 package com.backend.mediConnect.service.impl;
 import com.backend.mediConnect.dto.input.DoctorInputDto;
 import com.backend.mediConnect.dto.output.DoctorOutputDto;
+import com.backend.mediConnect.dto.output.SpecialtyOutputDto;
 import com.backend.mediConnect.dto.update.DoctorUpdateDto;
 import com.backend.mediConnect.entity.Doctor;
+import com.backend.mediConnect.entity.Specialty;
+import com.backend.mediConnect.exceptions.BadRequestException;
 import com.backend.mediConnect.exceptions.ResourceNotFoundException;
 import com.backend.mediConnect.repository.DoctorRepository;
 import com.backend.mediConnect.service.IDoctorService;
 import com.backend.mediConnect.utils.JsonPrinter;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.rsocket.RSocketProperties;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,25 +24,45 @@ public class DoctorService implements IDoctorService {
 
     private final Logger LOGGER = LoggerFactory.getLogger(DoctorService.class);
     private final DoctorRepository doctorRepository;
+
+    private final SpecialtyService specialtyService;
     private final ModelMapper modelMapper;
 
-    public DoctorService(DoctorRepository doctorRepository, ModelMapper modelMapper) {
+    public DoctorService(DoctorRepository doctorRepository, SpecialtyService specialtyService, ModelMapper modelMapper) {
         this.doctorRepository = doctorRepository;
+        this.specialtyService = specialtyService;
         this.modelMapper = modelMapper;
     }
 
-
     @Override
-    public DoctorOutputDto registerDoctor(DoctorInputDto doctor) {
+    public DoctorOutputDto registerDoctor(DoctorInputDto doctor) throws BadRequestException{
 
         LOGGER.info("Doctor information received " + JsonPrinter.toString(doctor));
-        Doctor doctorEntity = modelMapper.map(doctor, Doctor.class);
 
-        Doctor doctorPersisted = doctorRepository.save(doctorEntity);
+        DoctorOutputDto doctorOutputDto;
 
-        DoctorOutputDto doctorOutputDto = modelMapper.map(doctorPersisted, DoctorOutputDto.class);
+        SpecialtyOutputDto specialtyOutputDto = specialtyService.findSpecialtyById(doctor.getSpecialtyID());
 
-        LOGGER.info("Doctor saved: " + JsonPrinter.toString(doctorOutputDto));
+        String specialtyNotInDB = "Specialty is not found in our database.";
+
+        if(specialtyOutputDto == null){
+            LOGGER.error(specialtyNotInDB);
+            throw new BadRequestException(specialtyNotInDB);
+        } else {
+
+            Specialty specialty = modelMapper.map(specialtyOutputDto, Specialty.class);
+            Doctor doctorEntity = modelMapper.map(doctor, Doctor.class);
+            doctorEntity.setId(null);
+            doctorEntity.setSpecialty(specialty);
+
+            Doctor doctorPersisted = doctorRepository.save(doctorEntity);
+
+            doctorOutputDto = modelMapper.map(doctorPersisted, DoctorOutputDto.class);
+
+            LOGGER.info("Doctor saved: " + JsonPrinter.toString(doctorOutputDto));
+
+        }
+
 
         return doctorOutputDto;
 
@@ -87,4 +112,5 @@ public class DoctorService implements IDoctorService {
             throw new ResourceNotFoundException("Couldn't find doctor with id " + id);
         }
     }
+
 }

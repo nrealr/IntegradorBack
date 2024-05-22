@@ -34,15 +34,19 @@ public class DoctorInputDto {
     @Size(max = 500, message = "Description field must have up to 500 characters")
     private String description;
 
+    @NotNull(message = "Specialty field cannot be null")
+    private Long specialtyID;
+
     public DoctorInputDto() {
     }
 
-    public DoctorInputDto(String name, String lastname, String rut, String img, String description) {
+    public DoctorInputDto(String name, String lastname, String rut, String img, String description, Long specialtyID) {
         this.name = name;
         this.lastname = lastname;
         this.rut = rut;
         this.img = img;
         this.description = description;
+        this.specialtyID = specialtyID;
     }
 
     public String getName() {
@@ -83,5 +87,13 @@ public class DoctorInputDto {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Long getSpecialtyID() {
+        return specialtyID;
+    }
+
+    public void setSpecialtyID(Long specialtyID) {
+        this.specialtyID = specialtyID;
     }
 }

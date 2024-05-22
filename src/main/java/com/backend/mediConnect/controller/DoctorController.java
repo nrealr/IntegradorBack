@@ -1,6 +1,7 @@
 package com.backend.mediConnect.controller;
 import com.backend.mediConnect.dto.input.DoctorInputDto;
 import com.backend.mediConnect.dto.output.DoctorOutputDto;
+import com.backend.mediConnect.exceptions.BadRequestException;
 import com.backend.mediConnect.exceptions.ResourceNotFoundException;
 import com.backend.mediConnect.service.impl.DoctorService;
 import org.springframework.http.HttpStatus;
@@ -22,7 +23,7 @@ public class DoctorController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<DoctorOutputDto> registerDoctor(@RequestBody @Valid DoctorInputDto doctor) {
+    public ResponseEntity<DoctorOutputDto> registerDoctor(@RequestBody @Valid DoctorInputDto doctor) throws BadRequestException {
         return new ResponseEntity<>(doctorService.registerDoctor(doctor), HttpStatus.CREATED);
     }
 
