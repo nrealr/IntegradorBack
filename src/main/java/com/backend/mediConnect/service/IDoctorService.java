@@ -15,5 +15,4 @@ public interface IDoctorService {
     DoctorOutputDto updateDoctor(DoctorUpdateDto doctor);
     void deleteDoctor(Long id) throws ResourceNotFoundException;
 
-
 }
