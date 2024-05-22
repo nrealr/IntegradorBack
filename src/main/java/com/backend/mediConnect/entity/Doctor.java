@@ -25,16 +25,30 @@ public class Doctor {
     @Column(length = 500)
     private String description;
 
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "specialty_id")
+    private Specialty specialty;
+
     public Doctor() {
     }
 
-    public Doctor(Long id, String name, String lastname, String rut, String img, String description) {
+    public Doctor(Long id, String name, String lastname, String rut, String img, String description, Specialty specialty) {
         this.id = id;
         this.name = name;
         this.lastname = lastname;
         this.rut = rut;
         this.img = img;
         this.description = description;
+        this.specialty = specialty;
+    }
+
+    public Doctor(String name, String lastname, String rut, String img, String description, Specialty specialty) {
+        this.name = name;
+        this.lastname = lastname;
+        this.rut = rut;
+        this.img = img;
+        this.description = description;
+        this.specialty = specialty;
     }
 
     public Long getId() {
@@ -85,6 +99,14 @@ public class Doctor {
         this.description = description;
     }
 
+    public Specialty getSpecialty() {
+        return specialty;
+    }
+
+    public void setSpecialty(Specialty specialty) {
+        this.specialty = specialty;
+    }
+
     @Override
     public String toString() {
         return "Doctor{" +
@@ -94,6 +116,7 @@ public class Doctor {
                 ", rut='" + rut + '\'' +
                 ", img='" + img + '\'' +
                 ", description='" + description + '\'' +
+                ", specialty=' " + specialty + '\'' +
                 '}';
     }
 }
