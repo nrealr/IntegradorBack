@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.rsocket.RSocketProperties;
 import org.springframework.stereotype.Service;
 
+import javax.print.Doc;
 import java.util.List;
 
 @Service
@@ -97,8 +98,48 @@ public class DoctorService implements IDoctorService {
     }
 
     @Override
-    public DoctorOutputDto updateDoctor(DoctorUpdateDto doctor) {
-        return null;
+    public DoctorOutputDto updateDoctor(DoctorUpdateDto doctor) throws ResourceNotFoundException{
+
+        Doctor providedDoctor = modelMapper.map(doctor, Doctor.class);
+        Doctor doctorToUpdate = doctorRepository.findById(doctor.getId()).orElse(null);
+
+        DoctorOutputDto doctorOutputDto;
+
+        String docNotFound = "The provided Id does not match any doctor in our database.";
+        String specNotFound = "The provided specialty does not exist in our database.";
+
+        if(doctorToUpdate == null){
+            LOGGER.info("Cant update: " + docNotFound);
+            throw new ResourceNotFoundException(docNotFound);
+        } else {
+
+            LOGGER.info("Doctor found: " + JsonPrinter.toString(doctorToUpdate));
+
+            SpecialtyOutputDto specialtyOutputDto = specialtyService.findSpecialtyById(doctor.getSpecialtyID());
+
+            if (specialtyOutputDto == null){
+                LOGGER.info("Cant update: " + specNotFound);
+                throw new ResourceNotFoundException(specNotFound);
+
+            } else {
+
+                Specialty specialty = modelMapper.map(specialtyOutputDto, Specialty.class);
+
+                doctorToUpdate.setName(providedDoctor.getName());
+                doctorToUpdate.setLastname(providedDoctor.getLastname());
+                doctorToUpdate.setDescription(providedDoctor.getDescription());
+                doctorToUpdate.setImg(providedDoctor.getImg());
+                doctorToUpdate.setRut(providedDoctor.getRut());
+                doctorToUpdate.setSpecialty(specialty);
+
+                doctorRepository.save(doctorToUpdate);
+
+                doctorOutputDto = modelMapper.map(doctorToUpdate, DoctorOutputDto.class);
+            }
+
+        }
+
+        return doctorOutputDto;
     }
 
     @Override

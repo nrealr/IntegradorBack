@@ -13,7 +13,7 @@ public interface IDoctorService {
     DoctorOutputDto registerDoctor(DoctorInputDto doctor) throws BadRequestException;
     List<DoctorOutputDto> listDoctors();
     DoctorOutputDto findDoctorById(Long id);
-    DoctorOutputDto updateDoctor(DoctorUpdateDto doctor);
+    DoctorOutputDto updateDoctor(DoctorUpdateDto doctor) throws ResourceNotFoundException;
     void deleteDoctor(Long id) throws ResourceNotFoundException;
 
 }
