@@ -14,7 +14,7 @@ public class ProyectoApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(ProyectoApplication.class, args);
-		logger.info("MedicCare is now running...");
+		logger.info("MedicConnect is now running...");
 	}
 
 	@Bean

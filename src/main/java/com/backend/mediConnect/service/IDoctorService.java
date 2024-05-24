@@ -6,10 +6,11 @@ import com.backend.mediConnect.dto.output.DoctorOutputDto;
 import com.backend.mediConnect.exceptions.ResourceNotFoundException;
 
 import java.util.List;
+import java.util.Set;
 
 public interface IDoctorService {
 
-    DoctorOutputDto registerDoctor(DoctorInputDto doctor);
+    DoctorOutputDto registerDoctor(DoctorInputDto doctor, Set<Long> featureIds);
     List<DoctorOutputDto> listDoctors();
     DoctorOutputDto findDoctorById(Long id);
     DoctorOutputDto updateDoctor(DoctorUpdateDto doctor);
