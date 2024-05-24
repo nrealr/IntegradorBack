@@ -4,8 +4,10 @@ import com.backend.mediConnect.dto.input.DoctorInputDto;
 import com.backend.mediConnect.dto.output.DoctorOutputDto;
 import com.backend.mediConnect.dto.update.DoctorUpdateDto;
 import com.backend.mediConnect.entity.Doctor;
+import com.backend.mediConnect.entity.Feature;
 import com.backend.mediConnect.exceptions.ResourceNotFoundException;
 import com.backend.mediConnect.repository.DoctorRepository;
+import com.backend.mediConnect.repository.FeatureRepository;
 import com.backend.mediConnect.service.IDoctorService;
 import com.backend.mediConnect.utils.JsonPrinter;
 import org.modelmapper.ModelMapper;
@@ -13,26 +15,36 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class DoctorService implements IDoctorService {
 
     private final Logger LOGGER = LoggerFactory.getLogger(DoctorService.class);
     private final DoctorRepository doctorRepository;
+    private final FeatureRepository featureRepository;
     private final ModelMapper modelMapper;
 
-    public DoctorService(DoctorRepository doctorRepository, ModelMapper modelMapper) {
+
+    public DoctorService(DoctorRepository doctorRepository, ModelMapper modelMapper, FeatureRepository featureRepository) {
         this.doctorRepository = doctorRepository;
         this.modelMapper = modelMapper;
+        this.featureRepository = featureRepository;
     }
 
 
     @Override
-    public DoctorOutputDto registerDoctor(DoctorInputDto doctor) {
+    public DoctorOutputDto registerDoctor(DoctorInputDto doctor, Set<Long> featureIds) {
 
         LOGGER.info("Doctor information received " + JsonPrinter.toString(doctor));
         Doctor doctorEntity = modelMapper.map(doctor, Doctor.class);
+
+        if (featureIds != null && !featureIds.isEmpty()) {
+            Set<Feature> features = new HashSet<>(featureRepository.findAllById(featureIds));
+            doctorEntity.setFeature(features);
+        }
 
         Doctor doctorPersisted = doctorRepository.save(doctorEntity);
 

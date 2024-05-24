@@ -1,6 +1,8 @@
 package com.backend.mediConnect.entity;
 import jakarta.persistence.*;
 
+import java.util.Set;
+
 @Entity
 @Table(name="DOCTORS")
 
@@ -24,6 +26,14 @@ public class Doctor {
 
     @Column(length = 500)
     private String description;
+
+    @ManyToMany
+    @JoinTable(
+            name = "DOCTORSFEATURES",
+            joinColumns = @JoinColumn(name = "doctors_id"),
+            inverseJoinColumns = @JoinColumn(name = "features_id")
+    )
+    private Set<Feature> features;
 
     public Doctor() {
     }
@@ -83,6 +93,14 @@ public class Doctor {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Set<Feature> getFeature() {
+        return features;
+    }
+
+    public void setFeature(Set<Feature> feature) {
+        this.features = feature;
     }
 
     @Override

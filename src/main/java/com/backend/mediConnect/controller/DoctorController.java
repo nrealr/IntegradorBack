@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import jakarta.validation.Valid;
 import java.util.List;
+import java.util.Set;
 
 
 @CrossOrigin(origins = "*")
@@ -22,8 +23,8 @@ public class DoctorController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<DoctorOutputDto> registerDoctor(@RequestBody @Valid DoctorInputDto doctor) {
-        return new ResponseEntity<>(doctorService.registerDoctor(doctor), HttpStatus.CREATED);
+    public ResponseEntity<DoctorOutputDto> registerDoctor(@RequestBody @Valid DoctorInputDto doctor, @RequestParam(required = false) Set<Long> featureIds) {
+        return new ResponseEntity<>(doctorService.registerDoctor(doctor, featureIds), HttpStatus.CREATED);
     }
 
     @GetMapping("/list")
