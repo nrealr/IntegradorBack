@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.io.IOException;
 import java.util.*;
 
 @SpringBootTest
@@ -19,7 +20,12 @@ public class DoctorServiceTest {
     public void shouldAddADoctorWithoutFeatures(){
         DoctorInputDto doctor = new DoctorInputDto("Pedro", "Pérez", "6857226-9", "https://images.app.goo.gl/Db6AwF3fVSHsSsWz9", "General Practice doctor");
 
-        DoctorOutputDto doctorAdded = doctorService.registerDoctor(doctor, Collections.emptySet());
+        DoctorOutputDto doctorAdded = null;
+        try {
+            doctorAdded = doctorService.registerDoctor(doctor, Collections.emptySet());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
         Assertions.assertTrue(doctorAdded.getId() != 0);
     }

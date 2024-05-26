@@ -1,5 +1,6 @@
 package com.backend.mediConnect.entity;
 import jakarta.persistence.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Set;
 
@@ -21,8 +22,8 @@ public class Doctor {
     @Column(length = 10)
     private String rut;
 
-    @Column(length = 500)
-    private String img;
+    @Lob
+    private byte[] img;
 
     @Column(length = 500)
     private String description;
@@ -42,7 +43,7 @@ public class Doctor {
     public Doctor() {
     }
 
-    public Doctor(Long id, String name, String lastname, String rut, String img, String description, Specialty specialty) {
+    public Doctor(Long id, String name, String lastname, String rut, byte[] img, String description, Specialty specialty) {
         this.id = id;
         this.name = name;
         this.lastname = lastname;
@@ -52,7 +53,7 @@ public class Doctor {
         this.specialty = specialty;
     }
 
-    public Doctor(String name, String lastname, String rut, String img, String description, Specialty specialty) {
+    public Doctor(String name, String lastname, String rut, byte[] img, String description, Specialty specialty) {
         this.name = name;
         this.lastname = lastname;
         this.rut = rut;
@@ -93,11 +94,11 @@ public class Doctor {
         this.rut = rut;
     }
 
-    public String getImg() {
+    public byte[] getImg() {
         return img;
     }
 
-    public void setImg(String img) {
+    public void setImg(byte[] img) {
         this.img = img;
     }
 

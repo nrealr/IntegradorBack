@@ -19,24 +19,25 @@ public class SpecialtyService implements ISpecialtyService {
     private final Logger LOGGER = LoggerFactory.getLogger(SpecialtyService.class);
     private final SpecialtyRepository specialtyRepository;
     private final ModelMapper modelMapper;
+    private final JsonPrinter jsonPrinter;
 
-    public SpecialtyService(SpecialtyRepository specialtyRepository, ModelMapper modelMapper) {
+    public SpecialtyService(SpecialtyRepository specialtyRepository, ModelMapper modelMapper, JsonPrinter jsonPrinter) {
         this.specialtyRepository = specialtyRepository;
         this.modelMapper = modelMapper;
+        this.jsonPrinter = jsonPrinter;
     }
-
 
     @Override
     public SpecialtyOutputDto registerSpecialty(SpecialtyInputDto specialty) {
 
-        LOGGER.info("Specialty information received " + JsonPrinter.toString(specialty));
+        LOGGER.info("Specialty information received " + jsonPrinter.toString(specialty));
         Specialty specialtyEntity = modelMapper.map(specialty, Specialty.class);
 
         Specialty specialtyPersisted = specialtyRepository.save(specialtyEntity);
 
         SpecialtyOutputDto specialtyOutputDto = modelMapper.map(specialtyPersisted, SpecialtyOutputDto.class);
 
-        LOGGER.info("Specialty saved: " + JsonPrinter.toString(specialtyOutputDto));
+        LOGGER.info("Specialty saved: " + jsonPrinter.toString(specialtyOutputDto));
 
         return specialtyOutputDto;
 
@@ -49,7 +50,7 @@ public class SpecialtyService implements ISpecialtyService {
                 .map(specialty -> modelMapper.map(specialty, SpecialtyOutputDto.class))
                 .toList();
 
-        LOGGER.info("List of all specialties; {}", JsonPrinter.toString((specialties)));
+        LOGGER.info("List of all specialties; {}", jsonPrinter.toString((specialties)));
 
         return specialties;
     }
@@ -62,7 +63,7 @@ public class SpecialtyService implements ISpecialtyService {
 
         if (specialtySearched != null){
             specialtyFound = modelMapper.map(specialtySearched, SpecialtyOutputDto.class);
-            LOGGER.info("Specialty found: {}", JsonPrinter.toString(specialtyFound));
+            LOGGER.info("Specialty found: {}", jsonPrinter.toString(specialtyFound));
         } else {
             LOGGER.error("The id is not registered on the database.");
         }
@@ -78,7 +79,7 @@ public class SpecialtyService implements ISpecialtyService {
         existingSpecialty.setDescription(specialty.getDescription());
         Specialty updatedSpecialty = specialtyRepository.save(existingSpecialty);
         SpecialtyOutputDto specialtyOutputDto = modelMapper.map(updatedSpecialty, SpecialtyOutputDto.class);
-        LOGGER.info("Specialty updated: {}", JsonPrinter.toString(specialtyOutputDto));
+        LOGGER.info("Specialty updated: {}", jsonPrinter.toString(specialtyOutputDto));
         return specialtyOutputDto;
     }
 

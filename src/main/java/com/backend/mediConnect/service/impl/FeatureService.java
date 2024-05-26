@@ -21,22 +21,24 @@ public class FeatureService implements IFeatureService {
     private final Logger LOGGER = LoggerFactory.getLogger(DoctorService.class);
     private final FeatureRepository featureRepository;
     private final ModelMapper modelMapper;
+    private final JsonPrinter jsonPrinter;
 
-    public FeatureService(FeatureRepository featureRepository, ModelMapper modelMapper) {
+    public FeatureService(FeatureRepository featureRepository, ModelMapper modelMapper, JsonPrinter jsonPrinter) {
         this.featureRepository = featureRepository;
         this.modelMapper = modelMapper;
+        this.jsonPrinter = jsonPrinter;
     }
 
     @Override
     public FeatureOutputDto addFeature(FeatureInputDto feature) {
-        LOGGER.info("Feature information received " + JsonPrinter.toString(feature));
+        LOGGER.info("Feature information received " + jsonPrinter.toString(feature));
         Feature featureEntity = modelMapper.map(feature, Feature.class);
 
         Feature featurePersisted = featureRepository.save(featureEntity);
 
         FeatureOutputDto featureOutputDto = modelMapper.map(featurePersisted, FeatureOutputDto.class);
 
-        LOGGER.info("Feature saved: " + JsonPrinter.toString(featureOutputDto));
+        LOGGER.info("Feature saved: " + jsonPrinter.toString(featureOutputDto));
 
         return featureOutputDto;
     }
@@ -48,7 +50,7 @@ public class FeatureService implements IFeatureService {
                 .map(feature -> modelMapper.map(feature, FeatureOutputDto.class))
                 .toList();
 
-        LOGGER.info("List of all features; {}", JsonPrinter.toString((features)));
+        LOGGER.info("List of all features; {}", jsonPrinter.toString((features)));
 
         return features;
     }
@@ -60,7 +62,7 @@ public class FeatureService implements IFeatureService {
 
         if (featureSearched != null){
             featureFound = modelMapper.map(featureSearched, FeatureOutputDto.class);
-            LOGGER.info("Feature found: {}", JsonPrinter.toString(featureFound));
+            LOGGER.info("Feature found: {}", jsonPrinter.toString(featureFound));
         } else {
             LOGGER.error("The id is not registered on the database.");
         }
@@ -79,7 +81,7 @@ public class FeatureService implements IFeatureService {
             featureRepository.save(featureToModify);
 
             featureOutputDto = modelMapper.map(featureToModify, FeatureOutputDto.class);
-            LOGGER.warn("Feature updated: {}", JsonPrinter.toString(featureOutputDto));
+            LOGGER.warn("Feature updated: {}", jsonPrinter.toString(featureOutputDto));
         } else {
             LOGGER.error("The feature was not found in the database. Update failed.");
 
