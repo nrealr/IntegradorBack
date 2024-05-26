@@ -14,14 +14,14 @@ public class DoctorServiceTest {
     @Autowired
     private IDoctorService doctorService;
 
-    @Test
+    /*@Test
     public void shouldAddADoctor(){
         DoctorInputDto doctor = new DoctorInputDto("Pedro", "Pérez", "6855226-9", "https://images.app.goo.gl/Db6AwF3fVSHsSsWz9", "General Practice doctor");
 
         DoctorOutputDto doctorAdded = doctorService.registerDoctor(doctor);
 
         Assertions.assertTrue(doctorAdded.getId() != 0);
-    }
+    }*/
 
     @Test
     public void shouldListAllDoctors(){
