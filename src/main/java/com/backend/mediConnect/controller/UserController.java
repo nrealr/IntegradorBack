@@ -29,7 +29,7 @@ public class UserController {
         return new ResponseEntity<UserDto>(iUserService.login(userLoginDto), HttpStatus.OK);
     }
 
-    @PostMapping("/create")
+    @PostMapping("/register")
     public ResponseEntity<?> create(@Valid @RequestBody UserDto userDto, BindingResult validate)
             throws Exception {
 
