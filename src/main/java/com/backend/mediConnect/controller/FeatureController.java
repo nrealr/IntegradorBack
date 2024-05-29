@@ -48,7 +48,7 @@ public class FeatureController {
         return new ResponseEntity<>(featureService.findFeatureById(id), HttpStatus.OK);
     }
 
-    @PutMapping(value = "/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PutMapping(value = "/update/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasAuthority('ADMINISTRATOR')")
     public ResponseEntity<FeatureOutputDto> updateFeature (@ModelAttribute @Validated FeatureUpdateDto feature) throws IOException, ResourceNotFoundException {
         return new ResponseEntity<>(featureService.updateFeature(feature), HttpStatus.OK);
