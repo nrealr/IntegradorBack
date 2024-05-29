@@ -1,6 +1,7 @@
 package com.backend.mediConnect.dto.update;
 
 import jakarta.validation.constraints.*;
+import org.springframework.web.multipart.MultipartFile;
 
 public class FeatureUpdateDto {
 
@@ -11,14 +12,12 @@ public class FeatureUpdateDto {
     @NotBlank(message = "Name field cannot be blank")
     private String name;
 
-    @NotNull(message = "icon field cannot be null")
-    @NotBlank(message = "icon field cannot be blank")
-    private String icon;
+    private MultipartFile icon;
 
     public FeatureUpdateDto() {
     }
 
-    public FeatureUpdateDto(Long id, String name, String icon) {
+    public FeatureUpdateDto(Long id, String name, MultipartFile icon) {
         this.id = id;
         this.name = name;
         this.icon = icon;
@@ -40,11 +39,11 @@ public class FeatureUpdateDto {
         this.name = name;
     }
 
-    public String getIcon() {
+    public MultipartFile getIcon() {
         return icon;
     }
 
-    public void setIcon(String icon) {
+    public void setIcon(MultipartFile icon) {
         this.icon = icon;
     }
 }

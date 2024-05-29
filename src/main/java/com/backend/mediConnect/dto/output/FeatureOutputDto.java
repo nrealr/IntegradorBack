@@ -8,12 +8,12 @@ public class FeatureOutputDto {
 
     private Long id;
     private String name;
-    private String icon;
+    private byte[] icon;
 
     public FeatureOutputDto() {
     }
 
-    public FeatureOutputDto(Long id, String name, String icon) {
+    public FeatureOutputDto(Long id, String name, byte[] icon) {
         this.id = id;
         this.name = name;
         this.icon = icon;
@@ -35,11 +35,11 @@ public class FeatureOutputDto {
         this.name = name;
     }
 
-    public String getIcon() {
+    public byte[] getIcon() {
         return icon;
     }
 
-    public void setIcon(String icon) {
+    public void setIcon(byte[] icon) {
         this.icon = icon;
     }
 
