@@ -15,8 +15,9 @@ public class Feature {
     @Column(length = 50)
     private String name;
 
-    @Column(length = 500)
-    private String icon;
+    @Lob
+    @Column(name = "icon")
+    private byte[] icon;
 
     @ManyToMany(mappedBy = "features")
     private Set<Doctor> doctors;
@@ -24,7 +25,7 @@ public class Feature {
     public Feature() {
     }
 
-    public Feature(String name, Long id, String icon) {
+    public Feature(String name, Long id, byte[] icon) {
         this.name = name;
         this.id = id;
         this.icon = icon;
@@ -46,11 +47,11 @@ public class Feature {
         this.name = name;
     }
 
-    public String getIcon() {
+    public byte[] getIcon() {
         return icon;
     }
 
-    public void setIcon(String icon) {
+    public void setIcon(byte[] icon) {
         this.icon = icon;
     }
 

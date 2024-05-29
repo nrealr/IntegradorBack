@@ -12,7 +12,10 @@ import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+
+import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -30,16 +33,21 @@ public class FeatureService implements IFeatureService {
     }
 
     @Override
-    public FeatureOutputDto addFeature(FeatureInputDto feature) {
-        LOGGER.info("Feature information received " + jsonPrinter.toString(feature));
-        Feature featureEntity = modelMapper.map(feature, Feature.class);
+    public FeatureOutputDto addFeature(FeatureInputDto feature) throws IOException {
+        LOGGER.info("Feature information received: {}", jsonPrinter.toString(feature));
+
+        // Convert MultipartFile to byte[]
+        MultipartFile icon = feature.getIcon();
+        byte[] iconBytes = icon.getBytes();
+
+        Feature featureEntity = new Feature();
+        featureEntity.setName(feature.getName());
+        featureEntity.setIcon(iconBytes);
 
         Feature featurePersisted = featureRepository.save(featureEntity);
-
         FeatureOutputDto featureOutputDto = modelMapper.map(featurePersisted, FeatureOutputDto.class);
 
-        LOGGER.info("Feature saved: " + jsonPrinter.toString(featureOutputDto));
-
+        LOGGER.info("Feature saved: {}", jsonPrinter.toString(featureOutputDto));
         return featureOutputDto;
     }
 
@@ -70,23 +78,25 @@ public class FeatureService implements IFeatureService {
     }
 
     @Override
-    public FeatureOutputDto updateFeature(FeatureUpdateDto feature) {
-        Feature featureReceived = modelMapper.map(feature, Feature.class);
-        Feature featureToModify = featureRepository.findById(featureReceived.getId()).orElse(null);
+    public FeatureOutputDto updateFeature(FeatureUpdateDto feature) throws ResourceNotFoundException, IOException {
+        Feature featureToUpdate = featureRepository.findById(feature.getId()).orElse(null);
 
-        FeatureOutputDto featureOutputDto = null;
-
-        if(featureToModify != null){
-            featureToModify = featureReceived;
-            featureRepository.save(featureToModify);
-
-            featureOutputDto = modelMapper.map(featureToModify, FeatureOutputDto.class);
-            LOGGER.warn("Feature updated: {}", jsonPrinter.toString(featureOutputDto));
-        } else {
+        if (featureToUpdate == null) {
             LOGGER.error("The feature was not found in the database. Update failed.");
-
+            throw new ResourceNotFoundException("Feature not found");
         }
 
+        // Convert MultipartFile to byte[]
+        MultipartFile icon = feature.getIcon();
+        byte[] iconBytes = icon.getBytes();
+
+        featureToUpdate.setName(feature.getName());
+        featureToUpdate.setIcon(iconBytes);
+
+        Feature featureUpdated = featureRepository.save(featureToUpdate);
+        FeatureOutputDto featureOutputDto = modelMapper.map(featureUpdated, FeatureOutputDto.class);
+
+        LOGGER.warn("Feature updated: {}", jsonPrinter.toString(featureOutputDto));
         return featureOutputDto;
     }
 

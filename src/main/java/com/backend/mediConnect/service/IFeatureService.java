@@ -8,13 +8,14 @@ import com.backend.mediConnect.dto.update.DoctorUpdateDto;
 import com.backend.mediConnect.dto.update.FeatureUpdateDto;
 import com.backend.mediConnect.exceptions.ResourceNotFoundException;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
 public interface IFeatureService {
-    FeatureOutputDto addFeature(FeatureInputDto feature);
+    FeatureOutputDto addFeature(FeatureInputDto feature) throws IOException;
     List<FeatureOutputDto> listFeatures();
     FeatureOutputDto findFeatureById(Long id);
-    FeatureOutputDto updateFeature(FeatureUpdateDto doctor);
+    FeatureOutputDto updateFeature(FeatureUpdateDto doctor) throws ResourceNotFoundException, IOException;
     void deleteFeature(Long id) throws ResourceNotFoundException;
 }

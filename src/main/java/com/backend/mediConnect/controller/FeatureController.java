@@ -8,10 +8,14 @@ import com.backend.mediConnect.exceptions.ResourceNotFoundException;
 import com.backend.mediConnect.service.impl.DoctorService;
 import com.backend.mediConnect.service.impl.FeatureService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import jakarta.validation.Valid;
+
+import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
@@ -26,8 +30,8 @@ public class FeatureController {
         this.featureService = featureService;
     }
 
-    @PostMapping("/add")
-    public ResponseEntity<FeatureOutputDto> addFeature(@RequestBody @Valid FeatureInputDto feature) {
+    @PostMapping(value = "/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<FeatureOutputDto> addFeature(@ModelAttribute @Validated FeatureInputDto feature) throws IOException {
         return new ResponseEntity<>(featureService.addFeature(feature), HttpStatus.CREATED);
     }
 
@@ -41,8 +45,8 @@ public class FeatureController {
         return new ResponseEntity<>(featureService.findFeatureById(id), HttpStatus.OK);
     }
 
-    @PutMapping("/update")
-    public ResponseEntity<FeatureOutputDto> updateFeature (@RequestBody @Valid FeatureUpdateDto feature) {
+    @PutMapping(value = "/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<FeatureOutputDto> updateFeature (@ModelAttribute @Validated FeatureUpdateDto feature) throws IOException, ResourceNotFoundException {
         return new ResponseEntity<>(featureService.updateFeature(feature), HttpStatus.OK);
     }
 
