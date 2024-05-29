@@ -1,27 +1,36 @@
 package com.backend.mediConnect.dto.output;
 
+import org.springframework.web.multipart.MultipartFile;
+
 public class DoctorOutputDto {
 
     private Long id;
     private String name;
     private String lastname;
     private String rut;
-    private String img;
+    private byte[] img;
     private String description;
-
-    private SpecialtyOutputDto specialty;
+    private Long specialtyId;
 
     public DoctorOutputDto() {
     }
 
-    public DoctorOutputDto(Long id, String name, String lastname, String rut, String img, String description, SpecialtyOutputDto specialty) {
+    public DoctorOutputDto(Long id, String name, String lastname, String rut, byte[] image, String description, Long specialtyId) {
         this.id = id;
         this.name = name;
         this.lastname = lastname;
         this.rut = rut;
-        this.img = img;
+        this.img = image;
         this.description = description;
-        this.specialty = specialty;
+        this.specialtyId = specialtyId;
+    }
+
+    public Long getSpecialtyId() {
+        return specialtyId;
+    }
+
+    public void setSpecialtyId(Long specialtyId) {
+        this.specialtyId = specialtyId;
     }
 
     public Long getId() {
@@ -56,11 +65,11 @@ public class DoctorOutputDto {
         this.rut = rut;
     }
 
-    public String getImg() {
+    public byte[] getImg() {
         return img;
     }
 
-    public void setImg(String img) {
+    public void setImg(byte[] img) {
         this.img = img;
     }
 
@@ -72,14 +81,6 @@ public class DoctorOutputDto {
         this.description = description;
     }
 
-    public SpecialtyOutputDto getSpecialty() {
-        return specialty;
-    }
-
-    public void setSpecialty(SpecialtyOutputDto specialty) {
-        this.specialty = specialty;
-    }
-
     @Override
     public String toString() {
         return "DoctorOutputDto{" +
@@ -89,7 +90,7 @@ public class DoctorOutputDto {
                 ", rut='" + rut + '\'' +
                 ", img='" + img + '\'' +
                 ", description='" + description + '\'' +
-                ", specialty ='" + specialty + '\'' +
+                ", specialtyid='" + specialtyId + '\'' +
                 '}';
     }
 }

@@ -1,70 +1,86 @@
 package com.backend.mediConnect.service.impl;
+
 import com.backend.mediConnect.dto.input.DoctorInputDto;
 import com.backend.mediConnect.dto.output.DoctorOutputDto;
-import com.backend.mediConnect.dto.output.SpecialtyOutputDto;
 import com.backend.mediConnect.dto.update.DoctorUpdateDto;
 import com.backend.mediConnect.entity.Doctor;
+import com.backend.mediConnect.entity.Feature;
 import com.backend.mediConnect.entity.Specialty;
-import com.backend.mediConnect.exceptions.BadRequestException;
 import com.backend.mediConnect.exceptions.ResourceNotFoundException;
 import com.backend.mediConnect.repository.DoctorRepository;
+import com.backend.mediConnect.repository.FeatureRepository;
+import com.backend.mediConnect.repository.SpecialtyRepository;
 import com.backend.mediConnect.service.IDoctorService;
 import com.backend.mediConnect.utils.JsonPrinter;
+import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.convention.MatchingStrategies;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.autoconfigure.rsocket.RSocketProperties;
 import org.springframework.stereotype.Service;
+import com.google.gson.Gson;
 
-import javax.print.Doc;
+import java.util.HashSet;
+import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class DoctorService implements IDoctorService {
 
     private final Logger LOGGER = LoggerFactory.getLogger(DoctorService.class);
     private final DoctorRepository doctorRepository;
-
-    private final SpecialtyService specialtyService;
+    private final FeatureRepository featureRepository;
+    private final SpecialtyRepository specialtyRepository;
     private final ModelMapper modelMapper;
+    private final Gson gson;
+    private final JsonPrinter jsonPrinter;
 
-    public DoctorService(DoctorRepository doctorRepository, SpecialtyService specialtyService, ModelMapper modelMapper) {
+    public DoctorService(DoctorRepository doctorRepository, SpecialtyRepository specialtyRepository, ModelMapper modelMapper, FeatureRepository featureRepository, Gson gson, JsonPrinter jsonPrinter) {
         this.doctorRepository = doctorRepository;
-        this.specialtyService = specialtyService;
+        this.specialtyRepository = specialtyRepository;
         this.modelMapper = modelMapper;
+        this.featureRepository = featureRepository;
+        this.gson = gson;
+        this.jsonPrinter = jsonPrinter;
     }
 
     @Override
-    public DoctorOutputDto registerDoctor(DoctorInputDto doctor) throws BadRequestException{
+    @Transactional
+    public DoctorOutputDto registerDoctor(DoctorInputDto doctorInputDto, Set<Long> featureIds) throws IOException {
+        LOGGER.info("Doctor information received: {}", jsonPrinter.toString(doctorInputDto));
+        // Doctor doctorEntity = modelMapper.map(doctorInputDto, Doctor.class);
 
-        LOGGER.info("Doctor information received " + JsonPrinter.toString(doctor));
 
-        DoctorOutputDto doctorOutputDto;
+        // Convertir MultipartFile a byte[]
+        byte[] imgBytes = doctorInputDto.getImg().getBytes();
+        Doctor doctorEntity = new Doctor();
+        doctorEntity.setName(doctorInputDto.getName());
+        doctorEntity.setLastname(doctorInputDto.getLastname());
+        doctorEntity.setRut(doctorInputDto.getRut());
+        doctorEntity.setDescription(doctorInputDto.getDescription());
+        doctorEntity.setImg(imgBytes);
 
-        SpecialtyOutputDto specialtyOutputDto = specialtyService.findSpecialtyById(doctor.getSpecialtyID());
-
-        String specialtyNotInDB = "Specialty is not found in our database.";
-
-        if(specialtyOutputDto == null){
-            LOGGER.error(specialtyNotInDB);
-            throw new BadRequestException(specialtyNotInDB);
-        } else {
-
-            Specialty specialty = modelMapper.map(specialtyOutputDto, Specialty.class);
-            Doctor doctorEntity = modelMapper.map(doctor, Doctor.class);
-            doctorEntity.setId(null);
-            doctorEntity.setSpecialty(specialty);
-
-            Doctor doctorPersisted = doctorRepository.save(doctorEntity);
-
-            doctorOutputDto = modelMapper.map(doctorPersisted, DoctorOutputDto.class);
-
-            LOGGER.info("Doctor saved: " + JsonPrinter.toString(doctorOutputDto));
-
+        Specialty specialty = null;
+        try {
+            specialty = specialtyRepository.findById(doctorInputDto.getSpecialtyId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Specialty not found"));
+        } catch (ResourceNotFoundException e) {
+            throw new RuntimeException(e);
         }
 
+        doctorEntity.setSpecialty(specialty);
 
+
+        if (featureIds != null && !featureIds.isEmpty()) {
+            Set<Feature> features = new HashSet<>(featureRepository.findAllById(featureIds));
+            doctorEntity.setFeature(features);
+        }
+
+        Doctor doctorPersisted = doctorRepository.save(doctorEntity);
+
+        DoctorOutputDto doctorOutputDto = modelMapper.map(doctorPersisted, DoctorOutputDto.class);
+
+        LOGGER.info("Doctor saved: {}", jsonPrinter.toString(doctorOutputDto));
         return doctorOutputDto;
 
     }
@@ -73,23 +89,23 @@ public class DoctorService implements IDoctorService {
     public List<DoctorOutputDto> listDoctors() {
         List<DoctorOutputDto> doctors = doctorRepository.findAll()
                 .stream()
-                .map(doctor -> modelMapper.map(doctor, DoctorOutputDto.class))
+                .map(doctor -> {
+                    DoctorOutputDto doctorOutputDto = modelMapper.map(doctor, DoctorOutputDto.class);
+                    doctorOutputDto.setSpecialtyId(doctor.getSpecialty().getId()); // Aquí asignamos el ID de la especialidad
+                    return doctorOutputDto;
+                })
                 .toList();
-
-        LOGGER.info("List of all doctors; {}", JsonPrinter.toString((doctors)));
-
+        LOGGER.info("List of all doctors: {}", jsonPrinter.toString(doctors));
         return doctors;
     }
 
     @Override
     public DoctorOutputDto findDoctorById(Long id) {
-
         Doctor doctorSearched = doctorRepository.findById(id).orElse(null);
         DoctorOutputDto doctorFound = null;
-
         if (doctorSearched != null){
             doctorFound = modelMapper.map(doctorSearched, DoctorOutputDto.class);
-            LOGGER.info("Doctor found: {}", JsonPrinter.toString(doctorFound));
+            LOGGER.info("Doctor found: {}", jsonPrinter.toString(doctorFound));
         } else {
             LOGGER.error("The id is not registered on the database.");
         }
@@ -98,60 +114,45 @@ public class DoctorService implements IDoctorService {
     }
 
     @Override
-    public DoctorOutputDto updateDoctor(DoctorUpdateDto doctor) throws ResourceNotFoundException{
+    public DoctorOutputDto updateDoctor(DoctorUpdateDto doctorUpdateDto) throws ResourceNotFoundException, IOException {
+        Long doctorId = doctorUpdateDto.getId();
+        Doctor doctorEntity = doctorRepository.findById(doctorId)
+                .orElseThrow(() -> new ResourceNotFoundException("Doctor not found"));
 
-        Doctor providedDoctor = modelMapper.map(doctor, Doctor.class);
-        Doctor doctorToUpdate = doctorRepository.findById(doctor.getId()).orElse(null);
-
-        DoctorOutputDto doctorOutputDto;
-
-        String docNotFound = "The provided Id does not match any doctor in our database.";
-        String specNotFound = "The provided specialty does not exist in our database.";
-
-        if(doctorToUpdate == null){
-            LOGGER.info("Cant update: " + docNotFound);
-            throw new ResourceNotFoundException(docNotFound);
-        } else {
-
-            LOGGER.info("Doctor found: " + JsonPrinter.toString(doctorToUpdate));
-
-            SpecialtyOutputDto specialtyOutputDto = specialtyService.findSpecialtyById(doctor.getSpecialtyID());
-
-            if (specialtyOutputDto == null){
-                LOGGER.info("Cant update: " + specNotFound);
-                throw new ResourceNotFoundException(specNotFound);
-
-            } else {
-
-                Specialty specialty = modelMapper.map(specialtyOutputDto, Specialty.class);
-
-                doctorToUpdate.setName(providedDoctor.getName());
-                doctorToUpdate.setLastname(providedDoctor.getLastname());
-                doctorToUpdate.setDescription(providedDoctor.getDescription());
-                doctorToUpdate.setImg(providedDoctor.getImg());
-                doctorToUpdate.setRut(providedDoctor.getRut());
-                doctorToUpdate.setSpecialty(specialty);
-
-                doctorRepository.save(doctorToUpdate);
-
-                doctorOutputDto = modelMapper.map(doctorToUpdate, DoctorOutputDto.class);
-            }
-
+        // Actualiza los campos
+        if (doctorUpdateDto.getName() != null) {
+            doctorEntity.setName(doctorUpdateDto.getName());
+        }
+        if (doctorUpdateDto.getLastname() != null) {
+            doctorEntity.setLastname(doctorUpdateDto.getLastname());
+        }
+        if (doctorUpdateDto.getRut() != null) {
+            doctorEntity.setRut(doctorUpdateDto.getRut());
+        }
+        if (doctorUpdateDto.getDescription() != null) {
+            doctorEntity.setDescription(doctorUpdateDto.getDescription());
+        }
+        if (doctorUpdateDto.getImg() != null && !doctorUpdateDto.getImg().isEmpty()) {
+            doctorEntity.setImg(doctorUpdateDto.getImg().getBytes());
+        }
+        if (doctorUpdateDto.getSpecialtyId() != null) {
+            Specialty specialty = specialtyRepository.findById(doctorUpdateDto.getSpecialtyId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Specialty not found"));
+            doctorEntity.setSpecialty(specialty);
         }
 
-        return doctorOutputDto;
+        Doctor updatedDoctor = doctorRepository.save(doctorEntity);
+        return modelMapper.map(updatedDoctor, DoctorOutputDto.class);
     }
 
     @Override
     public void deleteDoctor(Long id) throws ResourceNotFoundException {
+        Doctor doctorToDelete = doctorRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Doctor not found"));
 
-        if (doctorRepository.findById(id).orElse(null) != null){
-            doctorRepository.deleteById(id);
-            LOGGER.warn("Doctor with id {} was deleted", id);
-        }else {
-            LOGGER.error("Couldn't find doctor with id {}", id);
-            throw new ResourceNotFoundException("Couldn't find doctor with id " + id);
-        }
+        doctorToDelete.setSpecialty(null);
+
+        doctorRepository.delete(doctorToDelete);
+        LOGGER.warn("Doctor with id {} was deleted", id);
     }
-
 }
