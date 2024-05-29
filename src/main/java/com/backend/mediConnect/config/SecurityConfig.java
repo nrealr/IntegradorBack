@@ -66,13 +66,23 @@ public class SecurityConfig {
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.
                 authorizeHttpRequests(authConfig -> {
-            authConfig.requestMatchers("/users/login").permitAll();
-            authConfig.requestMatchers("/users/register").permitAll();
-            authConfig.requestMatchers("/doctors/list").permitAll();
-            authConfig.requestMatchers("/doctors/{id}").permitAll();
-            authConfig.requestMatchers("/features/{id}").permitAll();
-            authConfig.requestMatchers("/specialties/list").permitAll();
-            authConfig.requestMatchers("/specialties/{id}").permitAll();
+                    authConfig.requestMatchers("/users/login").permitAll();
+                    authConfig.requestMatchers("/users/register").permitAll();
+                    authConfig.requestMatchers("/doctors/register").permitAll();
+                    authConfig.requestMatchers("/doctors/list").permitAll();
+                    authConfig.requestMatchers("/doctors/{id}").permitAll();
+                    authConfig.requestMatchers("/doctors/delete/{id}").permitAll();
+                    authConfig.requestMatchers("/doctors/update/{id}").permitAll();
+                    authConfig.requestMatchers("/features/update/{id}").permitAll();
+                    authConfig.requestMatchers("/features/delete/{id}").permitAll();
+                    authConfig.requestMatchers("/features/add").permitAll();
+                    authConfig.requestMatchers("/features/list").permitAll();
+                    authConfig.requestMatchers("/features/{id}").permitAll();
+                    authConfig.requestMatchers("/specialties/list").permitAll();
+                    authConfig.requestMatchers("/specialties/{id}").permitAll();
+                    authConfig.requestMatchers("/specialties/register").permitAll();
+                    authConfig.requestMatchers("/specialties/update/{id}").permitAll();
+                    authConfig.requestMatchers("/specialties/delete/{id}").permitAll();
 
             authConfig.anyRequest().authenticated();
         })

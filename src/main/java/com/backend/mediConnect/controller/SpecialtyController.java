@@ -24,7 +24,7 @@ public class SpecialtyController {
     }
 
     @PostMapping("/register")
-    @PreAuthorize("hasAuthority('ADMINISTRATOR')")
+//    @PreAuthorize("hasAuthority('ADMINISTRATOR')")
     public ResponseEntity<SpecialtyOutputDto> registerSpecialty(@RequestBody @Valid SpecialtyInputDto specialty) {
         return new ResponseEntity<>(specialtyService.registerSpecialty(specialty), HttpStatus.CREATED);
     }
@@ -41,7 +41,7 @@ public class SpecialtyController {
 
 
     @PutMapping("/update/{id}")
-    @PreAuthorize("hasAuthority('ADMINISTRATOR')")
+//    @PreAuthorize("hasAuthority('ADMINISTRATOR')")
     public ResponseEntity<SpecialtyOutputDto> updateSpecialty(@PathVariable Long id, @Valid @RequestBody SpecialtyUpdateDto specialtyUpdateDto) {
         try {
             specialtyUpdateDto.setId(id); // Ensure the ID in the URL matches the ID in the body
@@ -53,7 +53,7 @@ public class SpecialtyController {
     }
 
     @DeleteMapping("delete/{id}")
-    @PreAuthorize("hasAuthority('ADMINISTRATOR')")
+//    @PreAuthorize("hasAuthority('ADMINISTRATOR')")
     public ResponseEntity<?> deleteSpecialty(@PathVariable Long id) throws ResourceNotFoundException {
         specialtyService.deleteSpecialty(id);
         return new ResponseEntity<>("Specialty successfully deleted", HttpStatus.NO_CONTENT);

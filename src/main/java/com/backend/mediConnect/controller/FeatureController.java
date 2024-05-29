@@ -32,13 +32,13 @@ public class FeatureController {
     }
 
     @PostMapping(value = "/add", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @PreAuthorize("hasAuthority('ADMINISTRATOR')")
+//    @PreAuthorize("hasAuthority('ADMINISTRATOR')")
     public ResponseEntity<FeatureOutputDto> addFeature(@ModelAttribute @Validated FeatureInputDto feature) throws IOException {
         return new ResponseEntity<>(featureService.addFeature(feature), HttpStatus.CREATED);
     }
 
     @GetMapping("/list")
-    @PreAuthorize("hasAuthority('ADMINISTRATOR')")
+//    @PreAuthorize("hasAuthority('ADMINISTRATOR')")
     public ResponseEntity<List<FeatureOutputDto>> listFeatures(){
         return new ResponseEntity<>(featureService.listFeatures(), HttpStatus.OK);
     }
@@ -49,13 +49,13 @@ public class FeatureController {
     }
 
     @PutMapping(value = "/update/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @PreAuthorize("hasAuthority('ADMINISTRATOR')")
+//    @PreAuthorize("hasAuthority('ADMINISTRATOR')")
     public ResponseEntity<FeatureOutputDto> updateFeature (@ModelAttribute @Validated FeatureUpdateDto feature) throws IOException, ResourceNotFoundException {
         return new ResponseEntity<>(featureService.updateFeature(feature), HttpStatus.OK);
     }
 
     @DeleteMapping("delete/{id}")
-    @PreAuthorize("hasAuthority('ADMINISTRATOR')")
+//    @PreAuthorize("hasAuthority('ADMINISTRATOR')")
     public ResponseEntity<?> deleteFeature(@PathVariable Long id) throws ResourceNotFoundException {
         featureService.deleteFeature(id);
         return new ResponseEntity<>("Feature successfully deleted", HttpStatus.NO_CONTENT);

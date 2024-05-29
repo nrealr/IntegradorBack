@@ -31,7 +31,7 @@ public class DoctorController {
     }
 
     @PostMapping("/register")
-    @PreAuthorize("hasAuthority('ADMINISTRATOR')")
+//    @PreAuthorize("hasAuthority('ADMINISTRATOR')")
     public ResponseEntity<DoctorOutputDto> registerDoctor(
             @RequestParam("name") String name,
             @RequestParam("lastname") String lastname,
@@ -80,7 +80,7 @@ public class DoctorController {
     }
 */
    @PutMapping(value = "/update/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-   @PreAuthorize("hasAuthority('ADMINISTRATOR')")
+//   @PreAuthorize("hasAuthority('ADMINISTRATOR')")
    public ResponseEntity<DoctorOutputDto> updateDoctor(
            @PathVariable Long id,
            @RequestParam("name") String name,
@@ -117,7 +117,7 @@ public class DoctorController {
     */
 
     @DeleteMapping("/delete/{id}")
-    @PreAuthorize("hasAuthority('ADMINISTRATOR')")
+//    @PreAuthorize("hasAuthority('ADMINISTRATOR')")
     public ResponseEntity<?> deleteDoctor(@PathVariable Long id) {
         try {
             doctorService.deleteDoctor(id);
