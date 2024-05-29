@@ -1,5 +1,6 @@
 package com.backend.mediConnect.controller;
 
+import com.backend.mediConnect.dto.UpdateRoleDto;
 import com.backend.mediConnect.dto.UserDto;
 import com.backend.mediConnect.dto.UserLoginDto;
 import com.backend.mediConnect.service.IUserService;
@@ -8,13 +9,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/users")
@@ -24,7 +23,7 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody UserLoginDto userLoginDto, BindingResult bindingResult){
         if (bindingResult.hasErrors()){
-            return new ResponseEntity<String>("User and password are mandatories", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<String>("User and password are mandatory", HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<UserDto>(iUserService.login(userLoginDto), HttpStatus.OK);
     }
@@ -44,20 +43,60 @@ public class UserController {
         }
     }
 
+    @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('REGISTERED') or hasAuthority('ADMINISTRATOR')")
+    public ResponseEntity<UserDto> getUserById(@PathVariable Long id) {
+        try {
+            UserDto userDto = iUserService.findUserById(id);
+            return new ResponseEntity<>(userDto, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PutMapping("/{id}/role")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR')")
+    public ResponseEntity<UserDto> updateUserRole(@PathVariable Long id, @Valid @RequestBody UpdateRoleDto updateRoleDto) {
+        try {
+            UserDto userDto = iUserService.updateUserRole(id, updateRoleDto.getRoleId());
+            return new ResponseEntity<>(userDto, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/all")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR')")
+    public ResponseEntity<List<UserDto>> getAllUsers() {
+        List<UserDto> users = iUserService.getAllUsers();
+        return new ResponseEntity<>(users, HttpStatus.OK);
+    }
+
+    @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('REGISTERED') or hasAuthority('ADMINISTRATOR')")
+    public ResponseEntity<UserDto> updateUserDetails(@PathVariable Long id, @RequestBody UserDto userDto) {
+        try {
+            UserDto updatedUser = iUserService.updateUserDetails(id, userDto.getName(), userDto.getLastname());
+            return new ResponseEntity<>(updatedUser, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @GetMapping("/area/administrator")
     @PreAuthorize("hasAuthority('ADMINISTRATOR')")
     public ResponseEntity<?> administratorAccess() {
-        return new ResponseEntity<>("You are administrator", HttpStatus.OK);
+        return new ResponseEntity<>("You are in admin area", HttpStatus.OK);
     }
 
     @GetMapping("/area/restricted-user")
-    @PreAuthorize("hasAuthority('RESTRICTED_USER')")
+    @PreAuthorize("hasAuthority('REGISTERED') or hasAuthority('ADMINISTRATOR')")
     public ResponseEntity<?> restrictedUserAccess() {
-        return new ResponseEntity<>("You are a restricted user", HttpStatus.OK);
+        return new ResponseEntity<>("You are in a restricted area", HttpStatus.OK);
     }
 
     @GetMapping("/area/logged-user")
     public ResponseEntity<?> loggedUser() {
-        return new ResponseEntity<>("You are logged, no rol", HttpStatus.OK);
+        return new ResponseEntity<>("You are logged, any rol", HttpStatus.OK);
     }
 }

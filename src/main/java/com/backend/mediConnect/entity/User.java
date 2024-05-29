@@ -4,19 +4,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-
 @Entity
+@Table(name="USERS")
 public class User implements UserDetails {
     private static final long serialVersionUID = 1L;
     @Id
@@ -26,8 +20,10 @@ public class User implements UserDetails {
     private String email;
     private String password;
     @ManyToOne
-    @JoinColumn(name = "id_role", nullable = false)
+    @JoinColumn(name = "id_role", nullable = true)
     private Role role;
+    private String name;
+    private String lastname;
 
 
     @Override
@@ -94,5 +90,21 @@ public class User implements UserDetails {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getLastname() {
+        return lastname;
+    }
+
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
     }
 }

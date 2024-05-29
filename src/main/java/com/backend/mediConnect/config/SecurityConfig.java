@@ -50,6 +50,12 @@ public class SecurityConfig {
                 authorizeHttpRequests(authConfig -> {
             authConfig.requestMatchers("/users/login").permitAll();
             authConfig.requestMatchers("/users/register").permitAll();
+            authConfig.requestMatchers("/doctors/list").permitAll();
+            authConfig.requestMatchers("/doctors/{id}").permitAll();
+            authConfig.requestMatchers("/features/{id}").permitAll();
+            authConfig.requestMatchers("/specialties/list").permitAll();
+            authConfig.requestMatchers("/specialties/{id}").permitAll();
+
             authConfig.anyRequest().authenticated();
         })
                 .csrf(csrf -> csrf.disable())

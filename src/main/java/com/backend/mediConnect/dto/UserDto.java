@@ -16,10 +16,11 @@ public class UserDto {
     @NotBlank
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
-    @NotNull
     private RoleName role;
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private String token;
+    private String name;
+    private String lastname;
 
     public Long getId() {
         return id;
@@ -59,5 +60,21 @@ public class UserDto {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getLastname() {
+        return lastname;
+    }
+
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
     }
 }

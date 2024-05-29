@@ -6,6 +6,7 @@ import com.backend.mediConnect.exceptions.ResourceNotFoundException;
 import com.backend.mediConnect.service.impl.SpecialtyService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import jakarta.validation.Valid;
@@ -23,6 +24,7 @@ public class SpecialtyController {
     }
 
     @PostMapping("/register")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR')")
     public ResponseEntity<SpecialtyOutputDto> registerSpecialty(@RequestBody @Valid SpecialtyInputDto specialty) {
         return new ResponseEntity<>(specialtyService.registerSpecialty(specialty), HttpStatus.CREATED);
     }
@@ -39,6 +41,7 @@ public class SpecialtyController {
 
 
     @PutMapping("/update/{id}")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR')")
     public ResponseEntity<SpecialtyOutputDto> updateSpecialty(@PathVariable Long id, @Valid @RequestBody SpecialtyUpdateDto specialtyUpdateDto) {
         try {
             specialtyUpdateDto.setId(id); // Ensure the ID in the URL matches the ID in the body
@@ -50,6 +53,7 @@ public class SpecialtyController {
     }
 
     @DeleteMapping("delete/{id}")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR')")
     public ResponseEntity<?> deleteSpecialty(@PathVariable Long id) throws ResourceNotFoundException {
         specialtyService.deleteSpecialty(id);
         return new ResponseEntity<>("Specialty successfully deleted", HttpStatus.NO_CONTENT);

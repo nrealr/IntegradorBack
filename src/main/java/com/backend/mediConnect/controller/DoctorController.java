@@ -11,6 +11,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -30,6 +31,7 @@ public class DoctorController {
     }
 
     @PostMapping("/register")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR')")
     public ResponseEntity<DoctorOutputDto> registerDoctor(
             @RequestParam("name") String name,
             @RequestParam("lastname") String lastname,
@@ -78,6 +80,7 @@ public class DoctorController {
     }
 */
    @PutMapping(value = "/update/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+   @PreAuthorize("hasAuthority('ADMINISTRATOR')")
    public ResponseEntity<DoctorOutputDto> updateDoctor(
            @PathVariable Long id,
            @RequestParam("name") String name,
@@ -114,6 +117,7 @@ public class DoctorController {
     */
 
     @DeleteMapping("/delete/{id}")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR')")
     public ResponseEntity<?> deleteDoctor(@PathVariable Long id) {
         try {
             doctorService.deleteDoctor(id);

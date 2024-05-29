@@ -9,6 +9,7 @@ import com.backend.mediConnect.service.impl.DoctorService;
 import com.backend.mediConnect.service.impl.FeatureService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import jakarta.validation.Valid;
@@ -27,11 +28,13 @@ public class FeatureController {
     }
 
     @PostMapping("/add")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR')")
     public ResponseEntity<FeatureOutputDto> addFeature(@RequestBody @Valid FeatureInputDto feature) {
         return new ResponseEntity<>(featureService.addFeature(feature), HttpStatus.CREATED);
     }
 
     @GetMapping("/list")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR')")
     public ResponseEntity<List<FeatureOutputDto>> listFeatures(){
         return new ResponseEntity<>(featureService.listFeatures(), HttpStatus.OK);
     }
@@ -42,11 +45,13 @@ public class FeatureController {
     }
 
     @PutMapping("/update")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR')")
     public ResponseEntity<FeatureOutputDto> updateFeature (@RequestBody @Valid FeatureUpdateDto feature) {
         return new ResponseEntity<>(featureService.updateFeature(feature), HttpStatus.OK);
     }
 
     @DeleteMapping("delete/{id}")
+    @PreAuthorize("hasAuthority('ADMINISTRATOR')")
     public ResponseEntity<?> deleteFeature(@PathVariable Long id) throws ResourceNotFoundException {
         featureService.deleteFeature(id);
         return new ResponseEntity<>("Feature successfully deleted", HttpStatus.NO_CONTENT);
