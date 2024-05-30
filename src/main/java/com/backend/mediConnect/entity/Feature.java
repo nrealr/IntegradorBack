@@ -16,7 +16,7 @@ public class Feature {
     private String name;
 
     @Lob
-    @Column(name = "icon")
+    @Column(name = "icon", columnDefinition = "LONGBLOB")
     private byte[] icon;
 
     @ManyToMany(mappedBy = "features")

@@ -23,6 +23,7 @@ public class Doctor {
     private String rut;
 
     @Lob
+    @Column(name = "img", columnDefinition = "LONGBLOB")
     private byte[] img;
 
     @Column(length = 500)
