@@ -80,7 +80,7 @@ public class DoctorController {
     }
 */
    @PutMapping(value = "/update/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-   @PreAuthorize("hasAuthority('ADMINISTRATOR')")
+//   @PreAuthorize("hasAuthority('ADMINISTRATOR')")
    public ResponseEntity<DoctorOutputDto> updateDoctor(
            @PathVariable Long id,
            @RequestParam("name") String name,

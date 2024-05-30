@@ -70,6 +70,7 @@ public class SecurityConfig {
             authConfig.requestMatchers("/users/register").permitAll();
             authConfig.requestMatchers("/doctors/list").permitAll();
             authConfig.requestMatchers("/doctors/{id}").permitAll();
+            authConfig.requestMatchers("/doctors/update/{id}").permitAll();
             authConfig.requestMatchers("/features/{id}").permitAll();
             authConfig.requestMatchers("/specialties/list").permitAll();
             authConfig.requestMatchers("/specialties/{id}").permitAll();
