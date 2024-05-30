@@ -3,6 +3,7 @@ package com.backend.mediConnect.service;
 import com.backend.mediConnect.dto.input.DoctorInputDto;
 import com.backend.mediConnect.dto.update.DoctorUpdateDto;
 import com.backend.mediConnect.dto.output.DoctorOutputDto;
+import com.backend.mediConnect.entity.Feature;
 import com.backend.mediConnect.exceptions.ResourceNotFoundException;
 
 import java.io.IOException;
@@ -17,4 +18,5 @@ public interface IDoctorService {
     DoctorOutputDto findDoctorById(Long id) throws ResourceNotFoundException;
     DoctorOutputDto updateDoctor(DoctorUpdateDto doctorUpdateDto, Set<Long> featureIds) throws ResourceNotFoundException, IOException;
     void deleteDoctor(Long id) throws ResourceNotFoundException;
+    List<Feature> getDoctorFeatures(Long doctorId) throws ResourceNotFoundException;
 }

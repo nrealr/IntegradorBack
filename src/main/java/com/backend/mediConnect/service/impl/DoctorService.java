@@ -17,13 +17,12 @@ import org.hibernate.Hibernate;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 import com.google.gson.Gson;
 
-import java.util.HashSet;
+import java.util.*;
 import java.io.IOException;
-import java.util.List;
-import java.util.Set;
 
 @Service
 public class DoctorService implements IDoctorService {
@@ -167,5 +166,15 @@ public class DoctorService implements IDoctorService {
 
         doctorRepository.delete(doctorToDelete);
         LOGGER.warn("Doctor with id {} was deleted", id);
+    }
+    @Override
+    public List<Feature> getDoctorFeatures(Long doctorId) throws ResourceNotFoundException {
+        Optional<Doctor> doctorOptional = doctorRepository.findById(doctorId);
+        if (doctorOptional.isPresent()) {
+            Doctor doctor = doctorOptional.get();
+            return new ArrayList<>(doctor.getFeature());
+        } else {
+            throw new ResourceNotFoundException("Doctor not found");
+        }
     }
 }

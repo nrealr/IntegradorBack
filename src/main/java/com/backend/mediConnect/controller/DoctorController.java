@@ -3,6 +3,7 @@ package com.backend.mediConnect.controller;
 import com.backend.mediConnect.dto.input.DoctorInputDto;
 import com.backend.mediConnect.dto.output.DoctorOutputDto;
 import com.backend.mediConnect.dto.update.DoctorUpdateDto;
+import com.backend.mediConnect.entity.Feature;
 import com.backend.mediConnect.exceptions.ResourceNotFoundException;
 import com.backend.mediConnect.service.IDoctorService;
 import com.backend.mediConnect.service.impl.DoctorService;
@@ -127,6 +128,16 @@ public class DoctorController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         } catch (DataIntegrityViolationException e) {
             return new ResponseEntity<>("No se puede eliminar el doctor porque está asociado a una especialidad", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/{id}/features")
+    public ResponseEntity<List<Feature>> getDoctorFeatures(@PathVariable Long id) {
+        try {
+            List<Feature> features = doctorService.getDoctorFeatures(id);
+            return ResponseEntity.ok(features);
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
 
