@@ -13,6 +13,7 @@ import com.backend.mediConnect.repository.SpecialtyRepository;
 import com.backend.mediConnect.service.IDoctorService;
 import com.backend.mediConnect.utils.JsonPrinter;
 import jakarta.transaction.Transactional;
+import org.hibernate.Hibernate;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -114,12 +115,12 @@ public class DoctorService implements IDoctorService {
     }
 
     @Override
-    public DoctorOutputDto updateDoctor(DoctorUpdateDto doctorUpdateDto) throws ResourceNotFoundException, IOException {
+    @Transactional
+    public DoctorOutputDto updateDoctor(DoctorUpdateDto doctorUpdateDto, Set<Long> featureIds) throws ResourceNotFoundException, IOException {
         Long doctorId = doctorUpdateDto.getId();
         Doctor doctorEntity = doctorRepository.findById(doctorId)
                 .orElseThrow(() -> new ResourceNotFoundException("Doctor not found"));
 
-        // Actualiza los campos
         if (doctorUpdateDto.getName() != null) {
             doctorEntity.setName(doctorUpdateDto.getName());
         }
@@ -140,10 +141,21 @@ public class DoctorService implements IDoctorService {
                     .orElseThrow(() -> new ResourceNotFoundException("Specialty not found"));
             doctorEntity.setSpecialty(specialty);
         }
+        if (featureIds != null) {
+            Hibernate.initialize(doctorEntity.getFeature());
+            for (Long featureId : featureIds) {
+                Feature feature = featureRepository.findById(featureId)
+                        .orElseThrow(() -> new ResourceNotFoundException("Feature not found: " + featureId));
+                if (!doctorEntity.getFeature().contains(feature)) {
+                    doctorEntity.getFeature().add(feature);
+                }
+            }
+        }
 
         Doctor updatedDoctor = doctorRepository.save(doctorEntity);
         return modelMapper.map(updatedDoctor, DoctorOutputDto.class);
     }
+
 
     @Override
     public void deleteDoctor(Long id) throws ResourceNotFoundException {

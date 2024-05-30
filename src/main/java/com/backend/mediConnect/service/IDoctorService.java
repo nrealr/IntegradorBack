@@ -12,9 +12,8 @@ import java.util.Set;
 public interface IDoctorService {
 
     DoctorOutputDto registerDoctor(DoctorInputDto doctor, Set<Long> featureIds)throws IOException;
-
     List<DoctorOutputDto> listDoctors();
     DoctorOutputDto findDoctorById(Long id) throws ResourceNotFoundException;
-    DoctorOutputDto updateDoctor(DoctorUpdateDto doctorUpdateDto) throws ResourceNotFoundException, IOException;
+    DoctorOutputDto updateDoctor(DoctorUpdateDto doctorUpdateDto, Set<Long> featureIds) throws ResourceNotFoundException, IOException;
     void deleteDoctor(Long id) throws ResourceNotFoundException;
 }

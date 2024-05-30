@@ -88,7 +88,8 @@ public class DoctorController {
            @RequestParam("rut") String rut,
            @RequestParam("description") String description,
            @RequestParam("specialtyId") Long specialtyId,
-           @RequestParam(value = "img", required = false) MultipartFile img) throws IOException, ResourceNotFoundException {
+           @RequestParam(value = "img", required = false) MultipartFile img,
+           @RequestParam(required = false) Set<Long> featureIds) throws IOException, ResourceNotFoundException {
 
        DoctorUpdateDto doctorUpdateDto = new DoctorUpdateDto();
        doctorUpdateDto.setId(id);
@@ -99,7 +100,7 @@ public class DoctorController {
        doctorUpdateDto.setSpecialtyId(specialtyId);
        doctorUpdateDto.setImg(img);
 
-       DoctorOutputDto updatedDoctor = doctorService.updateDoctor(doctorUpdateDto);
+       DoctorOutputDto updatedDoctor = doctorService.updateDoctor(doctorUpdateDto, featureIds);
        return new ResponseEntity<>(updatedDoctor, HttpStatus.OK);
    }
 
