@@ -1,15 +1,22 @@
 package com.backend.mediConnect.controller;
 import com.backend.mediConnect.dto.input.SpecialtyInputDto;
+import com.backend.mediConnect.dto.output.FeatureOutputDto;
 import com.backend.mediConnect.dto.output.SpecialtyOutputDto;
+import com.backend.mediConnect.dto.update.FeatureUpdateDto;
 import com.backend.mediConnect.dto.update.SpecialtyUpdateDto;
 import com.backend.mediConnect.exceptions.ResourceNotFoundException;
 import com.backend.mediConnect.service.impl.SpecialtyService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import jakarta.validation.Valid;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 import java.util.List;
 
 
@@ -40,16 +47,10 @@ public class SpecialtyController {
     }
 
 
-    @PutMapping("/update/{id}")
+    @PutMapping(value = "/update/{id}")
 //    @PreAuthorize("hasAuthority('ADMINISTRATOR')")
-    public ResponseEntity<SpecialtyOutputDto> updateSpecialty(@PathVariable Long id, @Valid @RequestBody SpecialtyUpdateDto specialtyUpdateDto) {
-        try {
-            specialtyUpdateDto.setId(id); // Ensure the ID in the URL matches the ID in the body
-            SpecialtyOutputDto updatedSpecialty = specialtyService.updateSpecialty(specialtyUpdateDto);
-            return new ResponseEntity<>(updatedSpecialty, HttpStatus.OK);
-        } catch (ResourceNotFoundException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<SpecialtyOutputDto> updateSpecialty (@ModelAttribute @Validated SpecialtyUpdateDto specialty) throws IOException, ResourceNotFoundException {
+        return new ResponseEntity<>(specialtyService.updateSpecialty(specialty), HttpStatus.OK);
     }
 
     @DeleteMapping("delete/{id}")

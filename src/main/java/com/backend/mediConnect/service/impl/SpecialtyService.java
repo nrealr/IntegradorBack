@@ -1,7 +1,10 @@
 package com.backend.mediConnect.service.impl;
 import com.backend.mediConnect.dto.input.SpecialtyInputDto;
+import com.backend.mediConnect.dto.output.FeatureOutputDto;
 import com.backend.mediConnect.dto.output.SpecialtyOutputDto;
+import com.backend.mediConnect.dto.update.FeatureUpdateDto;
 import com.backend.mediConnect.dto.update.SpecialtyUpdateDto;
+import com.backend.mediConnect.entity.Feature;
 import com.backend.mediConnect.entity.Specialty;
 import com.backend.mediConnect.exceptions.ResourceNotFoundException;
 import com.backend.mediConnect.repository.SpecialtyRepository;
@@ -11,7 +14,9 @@ import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -72,14 +77,21 @@ public class SpecialtyService implements ISpecialtyService {
     }
 
     @Override
-    public SpecialtyOutputDto updateSpecialty(SpecialtyUpdateDto specialty) throws ResourceNotFoundException {
-        Specialty existingSpecialty = specialtyRepository.findById(specialty.getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Specialty not found with id " + specialty.getId()));
-        existingSpecialty.setName(specialty.getName());
-        existingSpecialty.setDescription(specialty.getDescription());
-        Specialty updatedSpecialty = specialtyRepository.save(existingSpecialty);
-        SpecialtyOutputDto specialtyOutputDto = modelMapper.map(updatedSpecialty, SpecialtyOutputDto.class);
-        LOGGER.info("Specialty updated: {}", jsonPrinter.toString(specialtyOutputDto));
+    public SpecialtyOutputDto updateSpecialty(SpecialtyUpdateDto specialty) throws ResourceNotFoundException, IOException {
+        Specialty specialtyToUpdate = specialtyRepository.findById(specialty.getId()).orElse(null);
+
+        if (specialtyToUpdate == null) {
+            LOGGER.error("The specialty was not found in the database. Update failed.");
+            throw new ResourceNotFoundException("Specialty not found");
+        }
+
+        specialtyToUpdate.setName(specialty.getName());
+        specialtyToUpdate.setDescription(specialty.getDescription());
+
+        Specialty specialtyUpdated = specialtyRepository.save(specialtyToUpdate);
+        SpecialtyOutputDto specialtyOutputDto = modelMapper.map(specialtyUpdated, SpecialtyOutputDto.class);
+
+        LOGGER.warn("Specialty updated: {}", jsonPrinter.toString(specialtyOutputDto));
         return specialtyOutputDto;
     }
 

@@ -119,11 +119,11 @@ public class Doctor {
         this.specialty = specialty;
     }
 
-    public Set<Feature> getFeature() {
+    public Set<Feature> getFeatures() {
         return features;
     }
 
-    public void setFeature(Set<Feature> feature) {
+    public void setFeatures(Set<Feature> feature) {
         this.features = feature;
     }
 

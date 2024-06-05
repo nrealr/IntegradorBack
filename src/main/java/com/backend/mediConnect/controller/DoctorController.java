@@ -132,12 +132,12 @@ public class DoctorController {
     }
 
     @GetMapping("/{id}/features")
-    public ResponseEntity<List<Feature>> getDoctorFeatures(@PathVariable Long id) {
+    public ResponseEntity<DoctorOutputDto> getDoctorFeatures(@PathVariable Long id) {
         try {
-            List<Feature> features = doctorService.getDoctorFeatures(id);
-            return ResponseEntity.ok(features);
-        } catch (ResourceNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            DoctorOutputDto doctorDTO = doctorService.getDoctorFeatures(id);
+            return ResponseEntity.ok(doctorDTO);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(404).body(null);
         }
     }
 

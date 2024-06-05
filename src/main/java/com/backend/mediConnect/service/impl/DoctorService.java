@@ -2,6 +2,7 @@ package com.backend.mediConnect.service.impl;
 
 import com.backend.mediConnect.dto.input.DoctorInputDto;
 import com.backend.mediConnect.dto.output.DoctorOutputDto;
+import com.backend.mediConnect.dto.output.FeatureOutputDto;
 import com.backend.mediConnect.dto.update.DoctorUpdateDto;
 import com.backend.mediConnect.entity.Doctor;
 import com.backend.mediConnect.entity.Feature;
@@ -23,6 +24,7 @@ import com.google.gson.Gson;
 
 import java.util.*;
 import java.io.IOException;
+import java.util.stream.Collectors;
 
 @Service
 public class DoctorService implements IDoctorService {
@@ -73,7 +75,7 @@ public class DoctorService implements IDoctorService {
 
         if (featureIds != null && !featureIds.isEmpty()) {
             Set<Feature> features = new HashSet<>(featureRepository.findAllById(featureIds));
-            doctorEntity.setFeature(features);
+            doctorEntity.setFeatures(features);
         }
 
         Doctor doctorPersisted = doctorRepository.save(doctorEntity);
@@ -86,6 +88,7 @@ public class DoctorService implements IDoctorService {
     }
 
     @Override
+    @Transactional
     public List<DoctorOutputDto> listDoctors() {
         List<DoctorOutputDto> doctors = doctorRepository.findAll()
                 .stream()
@@ -100,6 +103,7 @@ public class DoctorService implements IDoctorService {
     }
 
     @Override
+    @Transactional
     public DoctorOutputDto findDoctorById(Long id) {
         Doctor doctorSearched = doctorRepository.findById(id).orElse(null);
         DoctorOutputDto doctorFound = null;
@@ -143,12 +147,12 @@ public class DoctorService implements IDoctorService {
         }
         if (featureIds != null) {
             // Asegúrate de inicializar la colección antes de trabajar con ella
-            Hibernate.initialize(doctorEntity.getFeature());
+            Hibernate.initialize(doctorEntity.getFeatures());
             for (Long featureId : featureIds) {
                 Feature feature = featureRepository.findById(featureId)
                         .orElseThrow(() -> new ResourceNotFoundException("Feature not found: " + featureId));
-                if (!doctorEntity.getFeature().contains(feature)) {
-                    doctorEntity.getFeature().add(feature);
+                if (!doctorEntity.getFeatures().contains(feature)) {
+                    doctorEntity.getFeatures().add(feature);
                 }
             }
         }
@@ -167,14 +171,30 @@ public class DoctorService implements IDoctorService {
         doctorRepository.delete(doctorToDelete);
         LOGGER.warn("Doctor with id {} was deleted", id);
     }
+
+
     @Override
-    public List<Feature> getDoctorFeatures(Long doctorId) throws ResourceNotFoundException {
-        Optional<Doctor> doctorOptional = doctorRepository.findById(doctorId);
-        if (doctorOptional.isPresent()) {
-            Doctor doctor = doctorOptional.get();
-            return new ArrayList<>(doctor.getFeature());
+    @Transactional
+    public DoctorOutputDto getDoctorFeatures(Long doctorId) {
+        Optional<Doctor> doctorOpt = doctorRepository.findById(doctorId);
+        if (doctorOpt.isPresent()) {
+            Doctor doctor = doctorOpt.get();
+            DoctorOutputDto doctorOutputDto = new DoctorOutputDto(
+                    doctor.getId(),
+                    doctor.getName(),
+                    doctor.getLastname(),
+                    doctor.getRut(),
+                    doctor.getImg(),
+                    doctor.getDescription(),
+                    doctor.getSpecialty().getId()
+            );
+            Set<FeatureOutputDto> features = doctor.getFeatures().stream()
+                    .map(feature -> new FeatureOutputDto(feature.getId(), feature.getName(), feature.getIcon()))
+                    .collect(Collectors.toSet());
+            doctorOutputDto.setFeatures(features);
+            return doctorOutputDto;
         } else {
-            throw new ResourceNotFoundException("Doctor not found");
+            throw new RuntimeException("Doctor not found");
         }
     }
 }

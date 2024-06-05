@@ -2,6 +2,9 @@ package com.backend.mediConnect.dto.output;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Arrays;
+import java.util.Set;
+
 public class DoctorOutputDto {
 
     private Long id;
@@ -11,6 +14,7 @@ public class DoctorOutputDto {
     private byte[] img;
     private String description;
     private Long specialtyId;
+    private Set<FeatureOutputDto> features;
 
     public DoctorOutputDto() {
     }
@@ -81,6 +85,14 @@ public class DoctorOutputDto {
         this.description = description;
     }
 
+    public Set<FeatureOutputDto> getFeatures() {
+        return features;
+    }
+
+    public void setFeatures(Set<FeatureOutputDto> features) {
+        this.features = features;
+    }
+
     @Override
     public String toString() {
         return "DoctorOutputDto{" +
@@ -88,9 +100,10 @@ public class DoctorOutputDto {
                 ", name='" + name + '\'' +
                 ", lastname='" + lastname + '\'' +
                 ", rut='" + rut + '\'' +
-                ", img='" + img + '\'' +
+                ", img=" + Arrays.toString(img) +
                 ", description='" + description + '\'' +
-                ", specialtyid='" + specialtyId + '\'' +
+                ", specialtyId=" + specialtyId +
+                ", features=" + features +
                 '}';
     }
 }
