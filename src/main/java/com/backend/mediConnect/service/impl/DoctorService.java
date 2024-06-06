@@ -167,4 +167,24 @@ public class DoctorService implements IDoctorService {
         doctorRepository.delete(doctorToDelete);
         LOGGER.warn("Doctor with id {} was deleted", id);
     }
+
+    @Override
+    public List<DoctorOutputDto> findDoctorsBySearchParams(String searchParams) throws ResourceNotFoundException {
+
+        //List<DoctorOutputDto> searchResults;
+
+
+        List<DoctorOutputDto> searchResults = doctorRepository.findDoctorsBySpecialty(searchParams)
+                .stream()
+                .map(doctor -> {
+                    DoctorOutputDto doctorOutputDto = modelMapper.map(doctor, DoctorOutputDto.class);
+                    doctorOutputDto.setSpecialtyId(doctor.getSpecialty().getId()); // Aquí asignamos el ID de la especialidad
+                    return doctorOutputDto;
+                })
+                .toList();
+        LOGGER.info("Search Result: {}", jsonPrinter.toString(searchResults));
+
+
+        return searchResults;
+    }
 }
