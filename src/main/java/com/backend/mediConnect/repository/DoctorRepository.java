@@ -15,9 +15,13 @@ public interface DoctorRepository extends JpaRepository<Doctor, Long>{
     @Query("SELECT d FROM Doctor d WHERE d.specialty.name = :specialtyName")
     List<Doctor> findDoctorsBySpecialty(String specialtyName);
 
-    //@Query("SELECT d FROM Doctor d WHERE d.name LIKE %:doctorName% OR d.lastname LIKE %:doctorName%")
-    //List<Doctor> findDoctorsByNameOrLastnameContaining(String doctorName);
-
-
+    @Query("SELECT DISTINCT d FROM Doctor d " +
+            "LEFT JOIN FETCH d.specialty s " +
+            "LEFT JOIN FETCH d.features f " +
+            "WHERE LOWER(d.name) LIKE LOWER(CONCAT('%', :query, '%')) " +
+            "OR LOWER(d.lastname) LIKE LOWER(CONCAT('%', :query, '%')) " +
+            "OR LOWER(s.name) LIKE LOWER(CONCAT('%', :query, '%')) " +
+            "OR LOWER(f.name) LIKE LOWER(CONCAT('%', :query, '%'))")
+    List<Doctor> searchDoctors(@Param("query") String query);
 
 }

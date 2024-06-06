@@ -20,10 +20,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import com.google.gson.Gson;
 
-import java.util.HashSet;
+import java.util.*;
 import java.io.IOException;
-import java.util.List;
-import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class DoctorService implements IDoctorService {
@@ -169,22 +168,28 @@ public class DoctorService implements IDoctorService {
     }
 
     @Override
-    public List<DoctorOutputDto> findDoctorsBySearchParams(String searchParams) throws ResourceNotFoundException {
+    public List<DoctorOutputDto> searchDoctors(String query) throws ResourceNotFoundException {
 
-        //List<DoctorOutputDto> searchResults;
-
-
-        List<DoctorOutputDto> searchResults = doctorRepository.findDoctorsBySpecialty(searchParams)
+        List<DoctorOutputDto> searchResults = doctorRepository.searchDoctors(query)
                 .stream()
                 .map(doctor -> {
                     DoctorOutputDto doctorOutputDto = modelMapper.map(doctor, DoctorOutputDto.class);
                     doctorOutputDto.setSpecialtyId(doctor.getSpecialty().getId()); // Aquí asignamos el ID de la especialidad
+
+                    Optional<Doctor> optionalDoctorDb = doctorRepository.findById(doctor.getId()); //Aqui va a buscar el doctor encontrado a la bdd para traer todos los features que le corresponden
+
+                    List<Long> featureIds = optionalDoctorDb.map(d -> d.getFeature().stream()
+                                    .map(Feature::getId)
+                                    .toList())
+                            .orElse(Collections.emptyList()); //asignando las featureIds o dejando una coleccion vacía en caso de no tener ninguna
+
+                    doctorOutputDto.setFeatureIds(featureIds);
+
                     return doctorOutputDto;
                 })
                 .toList();
         LOGGER.info("Search Result: {}", jsonPrinter.toString(searchResults));
 
 
-        return searchResults;
-    }
+        return searchResults;    }
 }

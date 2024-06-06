@@ -2,6 +2,8 @@ package com.backend.mediConnect.dto.output;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 public class DoctorOutputDto {
 
     private Long id;
@@ -11,18 +13,21 @@ public class DoctorOutputDto {
     private byte[] img;
     private String description;
     private Long specialtyId;
+    private List<Long> featureIds;
+
 
     public DoctorOutputDto() {
     }
 
-    public DoctorOutputDto(Long id, String name, String lastname, String rut, byte[] image, String description, Long specialtyId) {
+    public DoctorOutputDto(Long id, String name, String lastname, String rut, byte[] img, String description, Long specialtyId, List<Long> featureIds) {
         this.id = id;
         this.name = name;
         this.lastname = lastname;
         this.rut = rut;
-        this.img = image;
+        this.img = img;
         this.description = description;
         this.specialtyId = specialtyId;
+        this.featureIds = featureIds;
     }
 
     public Long getSpecialtyId() {
@@ -79,6 +84,14 @@ public class DoctorOutputDto {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public List<Long> getFeatureIds() {
+        return featureIds;
+    }
+
+    public void setFeatureIds(List<Long> featureIds) {
+        this.featureIds = featureIds;
     }
 
     @Override

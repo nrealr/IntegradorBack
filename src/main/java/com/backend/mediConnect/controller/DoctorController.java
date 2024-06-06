@@ -130,11 +130,13 @@ public class DoctorController {
         }
     }
 
-    @GetMapping("/search")
-    public ResponseEntity<List<DoctorOutputDto>> searchDoctors(@RequestParam String search) throws ResourceNotFoundException{
 
-        return new ResponseEntity<>(doctorService.findDoctorsBySearchParams(search), HttpStatus.OK);
+    @GetMapping("/search")
+    public ResponseEntity<List<DoctorOutputDto>> searchDoctors(@RequestParam String query) throws ResourceNotFoundException{
+
+        return new ResponseEntity<>(doctorService.searchDoctors(query), HttpStatus.OK);
 
     }
+
 
 }

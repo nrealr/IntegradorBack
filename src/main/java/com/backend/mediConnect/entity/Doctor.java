@@ -33,7 +33,7 @@ public class Doctor {
     @JoinColumn(name = "specialty_id")
     private Specialty specialty;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "DOCTORSFEATURES",
             joinColumns = @JoinColumn(name = "doctors_id"),
