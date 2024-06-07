@@ -168,7 +168,7 @@ public class DoctorService implements IDoctorService {
     }
 
     @Override
-    public List<DoctorOutputDto> searchDoctors(String query) throws ResourceNotFoundException {
+    public List<DoctorOutputDto> searchDoctors(String query){
 
         List<DoctorOutputDto> searchResults = doctorRepository.searchDoctors(query)
                 .stream()

@@ -15,7 +15,7 @@ public interface IDoctorService {
     List<DoctorOutputDto> listDoctors();
     DoctorOutputDto findDoctorById(Long id) throws ResourceNotFoundException;
     DoctorOutputDto updateDoctor(DoctorUpdateDto doctorUpdateDto, Set<Long> featureIds) throws ResourceNotFoundException, IOException;
-    List<DoctorOutputDto> searchDoctors(String query) throws ResourceNotFoundException;
+    List<DoctorOutputDto> searchDoctors(String query);
 
     void deleteDoctor(Long id) throws ResourceNotFoundException;
 }
