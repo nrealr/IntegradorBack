@@ -84,6 +84,11 @@ public class SecurityConfig {
                     authConfig.requestMatchers("/specialties/register").permitAll();
                     authConfig.requestMatchers("/specialties/update/{id}").permitAll();
                     authConfig.requestMatchers("/specialties/delete/{id}").permitAll();
+                    authConfig.requestMatchers("/locations/delete/{id}").permitAll();
+                    authConfig.requestMatchers("/locations/list").permitAll();
+                    authConfig.requestMatchers("/locations/{id}").permitAll();
+                    authConfig.requestMatchers("/locations/register").permitAll();
+                    authConfig.requestMatchers("/locations/update/{id}").permitAll();
 
             authConfig.anyRequest().authenticated();
         })

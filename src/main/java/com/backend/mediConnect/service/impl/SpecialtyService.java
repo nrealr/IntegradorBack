@@ -1,10 +1,7 @@
 package com.backend.mediConnect.service.impl;
 import com.backend.mediConnect.dto.input.SpecialtyInputDto;
-import com.backend.mediConnect.dto.output.FeatureOutputDto;
 import com.backend.mediConnect.dto.output.SpecialtyOutputDto;
-import com.backend.mediConnect.dto.update.FeatureUpdateDto;
 import com.backend.mediConnect.dto.update.SpecialtyUpdateDto;
-import com.backend.mediConnect.entity.Feature;
 import com.backend.mediConnect.entity.Specialty;
 import com.backend.mediConnect.exceptions.ResourceNotFoundException;
 import com.backend.mediConnect.repository.SpecialtyRepository;
