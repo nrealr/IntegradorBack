@@ -33,6 +33,9 @@ public class DoctorInputDto {
     @NotNull(message = "Specialty field cannot be null")
     private Long specialtyId;
 
+    @NotNull(message = "Location field cannot be null")
+    private Long locationId;
+
     public @NotNull(message = "Specialty field cannot be null") Long getSpecialtyId() {
         return specialtyId;
     }
@@ -44,12 +47,14 @@ public class DoctorInputDto {
     public DoctorInputDto() {
     }
 
-    public DoctorInputDto(String name, String lastname, String rut, MultipartFile img, String description) {
+    public DoctorInputDto(String name, String lastname, String rut, MultipartFile img, String description, Long specialtyId, Long locationId) {
         this.name = name;
         this.lastname = lastname;
         this.rut = rut;
         this.img = img;
         this.description = description;
+        this.specialtyId = specialtyId;
+        this.locationId = locationId;
     }
 
     public String getName() {
@@ -86,6 +91,14 @@ public class DoctorInputDto {
 
     public MultipartFile getImg() {
         return img;
+    }
+
+    public Long getLocationId() {
+        return locationId;
+    }
+
+    public void setLocationId(Long locationId) {
+        this.locationId = locationId;
     }
 
     public void setImg(MultipartFile img) {

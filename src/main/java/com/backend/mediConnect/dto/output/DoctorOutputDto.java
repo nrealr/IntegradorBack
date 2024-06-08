@@ -15,18 +15,20 @@ public class DoctorOutputDto {
     private String description;
     private Long specialtyId;
     private Set<FeatureOutputDto> features;
+    private Long locationId;
 
     public DoctorOutputDto() {
     }
 
-    public DoctorOutputDto(Long id, String name, String lastname, String rut, byte[] image, String description, Long specialtyId) {
+    public DoctorOutputDto(Long id, String name, String lastname, String rut, byte[] img, String description, Long specialtyId, Long locationId) {
         this.id = id;
         this.name = name;
         this.lastname = lastname;
         this.rut = rut;
-        this.img = image;
+        this.img = img;
         this.description = description;
         this.specialtyId = specialtyId;
+        this.locationId = locationId;
     }
 
     public Long getSpecialtyId() {
@@ -93,6 +95,14 @@ public class DoctorOutputDto {
         this.features = features;
     }
 
+    public Long getLocationId() {
+        return locationId;
+    }
+
+    public void setLocationId(Long locationId) {
+        this.locationId = locationId;
+    }
+
     @Override
     public String toString() {
         return "DoctorOutputDto{" +
@@ -104,6 +114,7 @@ public class DoctorOutputDto {
                 ", description='" + description + '\'' +
                 ", specialtyId=" + specialtyId +
                 ", features=" + features +
+                ", locationId=" + locationId +
                 '}';
     }
 }

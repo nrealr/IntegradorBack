@@ -6,10 +6,12 @@ import com.backend.mediConnect.dto.output.FeatureOutputDto;
 import com.backend.mediConnect.dto.update.DoctorUpdateDto;
 import com.backend.mediConnect.entity.Doctor;
 import com.backend.mediConnect.entity.Feature;
+import com.backend.mediConnect.entity.Location;
 import com.backend.mediConnect.entity.Specialty;
 import com.backend.mediConnect.exceptions.ResourceNotFoundException;
 import com.backend.mediConnect.repository.DoctorRepository;
 import com.backend.mediConnect.repository.FeatureRepository;
+import com.backend.mediConnect.repository.LocationRepository;
 import com.backend.mediConnect.repository.SpecialtyRepository;
 import com.backend.mediConnect.service.IDoctorService;
 import com.backend.mediConnect.utils.JsonPrinter;
@@ -33,15 +35,17 @@ public class DoctorService implements IDoctorService {
     private final DoctorRepository doctorRepository;
     private final FeatureRepository featureRepository;
     private final SpecialtyRepository specialtyRepository;
+    private final LocationRepository locationRepository;
     private final ModelMapper modelMapper;
     private final Gson gson;
     private final JsonPrinter jsonPrinter;
 
-    public DoctorService(DoctorRepository doctorRepository, SpecialtyRepository specialtyRepository, ModelMapper modelMapper, FeatureRepository featureRepository, Gson gson, JsonPrinter jsonPrinter) {
+    public DoctorService(DoctorRepository doctorRepository, FeatureRepository featureRepository, SpecialtyRepository specialtyRepository, LocationRepository locationRepository, ModelMapper modelMapper, Gson gson, JsonPrinter jsonPrinter) {
         this.doctorRepository = doctorRepository;
-        this.specialtyRepository = specialtyRepository;
-        this.modelMapper = modelMapper;
         this.featureRepository = featureRepository;
+        this.specialtyRepository = specialtyRepository;
+        this.locationRepository = locationRepository;
+        this.modelMapper = modelMapper;
         this.gson = gson;
         this.jsonPrinter = jsonPrinter;
     }
@@ -72,6 +76,16 @@ public class DoctorService implements IDoctorService {
 
         doctorEntity.setSpecialty(specialty);
 
+        Location location = null;
+        try {
+            location = locationRepository.findById(doctorInputDto.getLocationId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Location not found"));
+        } catch (ResourceNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
+        doctorEntity.setLocation(location);
+
 
         if (featureIds != null && !featureIds.isEmpty()) {
             Set<Feature> features = new HashSet<>(featureRepository.findAllById(featureIds));
@@ -94,7 +108,8 @@ public class DoctorService implements IDoctorService {
                 .stream()
                 .map(doctor -> {
                     DoctorOutputDto doctorOutputDto = modelMapper.map(doctor, DoctorOutputDto.class);
-                    doctorOutputDto.setSpecialtyId(doctor.getSpecialty().getId()); // Aquí asignamos el ID de la especialidad
+                    doctorOutputDto.setSpecialtyId(doctor.getSpecialty().getId());
+                    doctorOutputDto.setLocationId(doctor.getLocation().getId());
                     return doctorOutputDto;
                 })
                 .toList();
@@ -145,6 +160,11 @@ public class DoctorService implements IDoctorService {
                     .orElseThrow(() -> new ResourceNotFoundException("Specialty not found"));
             doctorEntity.setSpecialty(specialty);
         }
+        if (doctorUpdateDto.getLocationId() != null) {
+            Location location = locationRepository.findById(doctorUpdateDto.getLocationId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Location not found"));
+            doctorEntity.setLocation(location);
+        }
         if (featureIds != null) {
             // Asegúrate de inicializar la colección antes de trabajar con ella
             Hibernate.initialize(doctorEntity.getFeatures());
@@ -186,7 +206,8 @@ public class DoctorService implements IDoctorService {
                     doctor.getRut(),
                     doctor.getImg(),
                     doctor.getDescription(),
-                    doctor.getSpecialty().getId()
+                    doctor.getSpecialty().getId(),
+                    doctor.getLocation().getId()
             );
             Set<FeatureOutputDto> features = doctor.getFeatures().stream()
                     .map(feature -> new FeatureOutputDto(feature.getId(), feature.getName(), feature.getIcon()))

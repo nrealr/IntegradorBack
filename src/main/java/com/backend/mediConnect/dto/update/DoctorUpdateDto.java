@@ -33,6 +33,9 @@ public class DoctorUpdateDto {
     @NotNull(message = "Specialty field cannot be null")
     private Long specialtyId;
 
+    @NotNull(message = "Location field cannot be null")
+    private Long locationId;
+
     public @NotNull(message = "ID field cannot be null") Long getId() {
         return id;
     }
@@ -79,5 +82,13 @@ public class DoctorUpdateDto {
 
     public void setImg(MultipartFile img) {
         this.img = img;
+    }
+
+    public Long getLocationId() {
+        return locationId;
+    }
+
+    public void setLocationId(Long locationId) {
+        this.locationId = locationId;
     }
 }

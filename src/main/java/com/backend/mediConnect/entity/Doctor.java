@@ -2,6 +2,7 @@ package com.backend.mediConnect.entity;
 import jakarta.persistence.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Arrays;
 import java.util.Set;
 
 @Entity
@@ -41,10 +42,14 @@ public class Doctor {
     )
     private Set<Feature> features;
 
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "location_id")
+    private Location location;
+
     public Doctor() {
     }
 
-    public Doctor(Long id, String name, String lastname, String rut, byte[] img, String description, Specialty specialty) {
+    public Doctor(Long id, String name, String lastname, String rut, byte[] img, String description, Specialty specialty, Location location) {
         this.id = id;
         this.name = name;
         this.lastname = lastname;
@@ -52,15 +57,18 @@ public class Doctor {
         this.img = img;
         this.description = description;
         this.specialty = specialty;
+        this.location = location;
     }
 
-    public Doctor(String name, String lastname, String rut, byte[] img, String description, Specialty specialty) {
+    public Doctor(String name, String lastname, String rut, String description, byte[] img, Specialty specialty, Set<Feature> features, Location location) {
         this.name = name;
         this.lastname = lastname;
         this.rut = rut;
-        this.img = img;
         this.description = description;
+        this.img = img;
         this.specialty = specialty;
+        this.features = features;
+        this.location = location;
     }
 
     public Long getId() {
@@ -127,6 +135,14 @@ public class Doctor {
         this.features = feature;
     }
 
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
+    }
+
     @Override
     public String toString() {
         return "Doctor{" +
@@ -134,9 +150,10 @@ public class Doctor {
                 ", name='" + name + '\'' +
                 ", lastname='" + lastname + '\'' +
                 ", rut='" + rut + '\'' +
-                ", img='" + img + '\'' +
+                ", img=" + Arrays.toString(img) +
                 ", description='" + description + '\'' +
-                ", specialty=' " + specialty + '\'' +
+                ", specialty=" + specialty +
+                ", location=" + location +
                 '}';
     }
 }

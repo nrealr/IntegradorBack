@@ -40,6 +40,7 @@ public class DoctorController {
             @RequestParam("description") String description,
             @RequestParam("img") MultipartFile img,
             @RequestParam("specialtyId") Long specialtyId,
+            @RequestParam("locationId") Long locationId,
             @RequestParam(required = false) Set<Long> featureIds) throws IOException {
         DoctorInputDto doctorInputDto = new DoctorInputDto();
         doctorInputDto.setName(name);
@@ -48,6 +49,7 @@ public class DoctorController {
         doctorInputDto.setDescription(description);
         doctorInputDto.setImg(img);
         doctorInputDto.setSpecialtyId(specialtyId);
+        doctorInputDto.setLocationId(locationId);
 
         DoctorOutputDto registeredDoctor = doctorService.registerDoctor(doctorInputDto,featureIds);
         return new ResponseEntity<>(registeredDoctor, HttpStatus.CREATED);
@@ -89,6 +91,7 @@ public class DoctorController {
            @RequestParam("rut") String rut,
            @RequestParam("description") String description,
            @RequestParam("specialtyId") Long specialtyId,
+           @RequestParam("locationId") Long locationId,
            @RequestParam(value = "img", required = false) MultipartFile img,
            @RequestParam(required = false) Set<Long> featureIds) throws IOException, ResourceNotFoundException {
 
@@ -99,6 +102,7 @@ public class DoctorController {
        doctorUpdateDto.setRut(rut);
        doctorUpdateDto.setDescription(description);
        doctorUpdateDto.setSpecialtyId(specialtyId);
+       doctorUpdateDto.setLocationId(locationId);
        doctorUpdateDto.setImg(img);
 
        DoctorOutputDto updatedDoctor = doctorService.updateDoctor(doctorUpdateDto, featureIds);
