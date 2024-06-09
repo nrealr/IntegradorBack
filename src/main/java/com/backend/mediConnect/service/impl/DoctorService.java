@@ -232,12 +232,12 @@ public class DoctorService implements IDoctorService {
 
                     Optional<Doctor> optionalDoctorDb = doctorRepository.findById(doctor.getId()); //Aqui va a buscar el doctor encontrado a la bdd para traer todos los features que le corresponden
 
-                    List<Long> featureIds = optionalDoctorDb.map(d -> d.getFeatures().stream()
-                                    .map(Feature::getId)
-                                    .toList())
-                            .orElse(Collections.emptyList()); //asignando las featureIds o dejando una coleccion vacía en caso de no tener ninguna
+                    Set<FeatureOutputDto> featureIds = optionalDoctorDb.map(d -> d.getFeatures().stream()
+                                    .map(feature -> new FeatureOutputDto(feature.getId(), feature.getName(), feature.getIcon()))
+                                    .collect(Collectors.toSet()))
+                            .orElse(Collections.emptySet());//asignando las featureIds o dejando una coleccion vacía en caso de no tener ninguna
 
-                    doctorOutputDto.setFeatureIds(featureIds);
+                    doctorOutputDto.setFeatures(featureIds);
 
                     return doctorOutputDto;
                 })
