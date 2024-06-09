@@ -5,6 +5,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.Arrays;
 import java.util.Set;
 
+import java.util.List;
+
 public class DoctorOutputDto {
 
     private Long id;

@@ -218,4 +218,32 @@ public class DoctorService implements IDoctorService {
             throw new RuntimeException("Doctor not found");
         }
     }
+
+
+
+    @Override
+    public List<DoctorOutputDto> searchDoctors(String query){
+
+        List<DoctorOutputDto> searchResults = doctorRepository.searchDoctors(query)
+                .stream()
+                .map(doctor -> {
+                    DoctorOutputDto doctorOutputDto = modelMapper.map(doctor, DoctorOutputDto.class);
+                    doctorOutputDto.setSpecialtyId(doctor.getSpecialty().getId()); // Aquí asignamos el ID de la especialidad
+
+                    Optional<Doctor> optionalDoctorDb = doctorRepository.findById(doctor.getId()); //Aqui va a buscar el doctor encontrado a la bdd para traer todos los features que le corresponden
+
+                    List<Long> featureIds = optionalDoctorDb.map(d -> d.getFeatures().stream()
+                                    .map(Feature::getId)
+                                    .toList())
+                            .orElse(Collections.emptyList()); //asignando las featureIds o dejando una coleccion vacía en caso de no tener ninguna
+
+                    doctorOutputDto.setFeatureIds(featureIds);
+
+                    return doctorOutputDto;
+                })
+                .toList();
+        LOGGER.info("Search Result: {}", jsonPrinter.toString(searchResults));
+
+
+        return searchResults;    }
 }

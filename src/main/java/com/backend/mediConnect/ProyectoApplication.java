@@ -31,7 +31,7 @@ public class ProyectoApplication {
 	public Gson gson() {
 		return new GsonBuilder()
 				.registerTypeAdapter(File.class, new FileTypeAdapter())
-				.create();
+				.create();	
 	}
 
 }

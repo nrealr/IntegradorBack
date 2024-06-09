@@ -3,7 +3,6 @@ package com.backend.mediConnect.controller;
 import com.backend.mediConnect.dto.input.DoctorInputDto;
 import com.backend.mediConnect.dto.output.DoctorOutputDto;
 import com.backend.mediConnect.dto.update.DoctorUpdateDto;
-import com.backend.mediConnect.entity.Feature;
 import com.backend.mediConnect.exceptions.ResourceNotFoundException;
 import com.backend.mediConnect.service.IDoctorService;
 import com.backend.mediConnect.service.impl.DoctorService;
@@ -144,5 +143,15 @@ public class DoctorController {
             return ResponseEntity.status(404).body(null);
         }
     }
+
+
+
+    @GetMapping("/search")
+    public ResponseEntity<List<DoctorOutputDto>> searchDoctors(@RequestParam String query){
+
+        return new ResponseEntity<>(doctorService.searchDoctors(query), HttpStatus.OK);
+
+    }
+
 
 }
