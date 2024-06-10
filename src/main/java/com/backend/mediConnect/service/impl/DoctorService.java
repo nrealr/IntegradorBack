@@ -187,6 +187,7 @@ public class DoctorService implements IDoctorService {
                 .orElseThrow(() -> new ResourceNotFoundException("Doctor not found"));
 
         doctorToDelete.setSpecialty(null);
+        doctorToDelete.setLocation(null);
 
         doctorRepository.delete(doctorToDelete);
         LOGGER.warn("Doctor with id {} was deleted", id);
