@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class LocationService implements ILocationService {
@@ -98,5 +99,16 @@ public class LocationService implements ILocationService {
             LOGGER.error("Couldn't find location with id {}", id);
             throw new ResourceNotFoundException("Couldn't find location with id " + id);
         }
+    }
+
+    @Override
+    public List<LocationOutputDto> searchLocations(String name) {
+        List<Location> locations = locationRepository.findByNameContainingIgnoreCase(name);
+        if (locations.isEmpty()) {
+            LOGGER.warn("No locations found with name containing: {}", name);
+        }
+        return locations.stream()
+                .map(location -> modelMapper.map(location, LocationOutputDto.class))
+                .collect(Collectors.toList());
     }
 }

@@ -14,4 +14,5 @@ public interface ILocationService {
     LocationOutputDto findLocationById(Long id);
     LocationOutputDto updateLocation(LocationUpdateDto specialty) throws ResourceNotFoundException, IOException;
     void deleteLocation(Long id) throws ResourceNotFoundException;
+    List<LocationOutputDto> searchLocations(String name);
 }

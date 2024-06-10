@@ -17,7 +17,7 @@ import java.util.List;
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/locations")
-public class LocationController {
+public class    LocationController {
     private final LocationService locationService;
 
     public LocationController(LocationService locationService) {
@@ -52,5 +52,17 @@ public class LocationController {
     public ResponseEntity<?> deleteLocation (@PathVariable Long id) throws ResourceNotFoundException {
         locationService.deleteLocation(id);
         return new ResponseEntity<>("Location successfully deleted", HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<Object> searchLocations(@RequestParam(required = false) String name) {
+        if (name == null || name.isEmpty()) {
+            return new ResponseEntity<>(locationService.listLocations(), HttpStatus.OK);
+        }
+        List<LocationOutputDto> results = locationService.searchLocations(name);
+        if (results.isEmpty()) {
+            return new ResponseEntity<>("No locations found", HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(results, HttpStatus.OK);
     }
 }
