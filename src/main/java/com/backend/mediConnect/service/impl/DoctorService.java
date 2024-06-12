@@ -223,28 +223,28 @@ public class DoctorService implements IDoctorService {
 
 
     @Override
-    public List<DoctorOutputDto> searchDoctors(String query){
-
+    public List<DoctorOutputDto> searchDoctors(String query) {
         List<DoctorOutputDto> searchResults = doctorRepository.searchDoctors(query)
                 .stream()
                 .map(doctor -> {
                     DoctorOutputDto doctorOutputDto = modelMapper.map(doctor, DoctorOutputDto.class);
                     doctorOutputDto.setSpecialtyId(doctor.getSpecialty().getId()); // Aquí asignamos el ID de la especialidad
 
-                    Optional<Doctor> optionalDoctorDb = doctorRepository.findById(doctor.getId()); //Aqui va a buscar el doctor encontrado a la bdd para traer todos los features que le corresponden
+                    Optional<Doctor> optionalDoctorDb = doctorRepository.findById(doctor.getId()); // Aquí va a buscar el doctor encontrado a la bdd para traer todos los features que le corresponden
 
                     Set<FeatureOutputDto> featureIds = optionalDoctorDb.map(d -> d.getFeatures().stream()
                                     .map(feature -> new FeatureOutputDto(feature.getId(), feature.getName(), feature.getIcon()))
                                     .collect(Collectors.toSet()))
-                            .orElse(Collections.emptySet());//asignando las featureIds o dejando una coleccion vacía en caso de no tener ninguna
+                            .orElse(Collections.emptySet()); // Asignando las featureIds o dejando una colección vacía en caso de no tener ninguna
 
                     doctorOutputDto.setFeatures(featureIds);
 
                     return doctorOutputDto;
                 })
-                .toList();
+                .collect(Collectors.toList()); // Cambiado para usar collect en vez de toList
+
         LOGGER.info("Search Result: {}", jsonPrinter.toString(searchResults));
 
-
-        return searchResults;    }
+        return searchResults;
+    }
 }
