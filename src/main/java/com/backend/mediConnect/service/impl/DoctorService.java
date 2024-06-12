@@ -223,8 +223,8 @@ public class DoctorService implements IDoctorService {
 
 
     @Override
-    public List<DoctorOutputDto> searchDoctors(String query) {
-        List<DoctorOutputDto> searchResults = doctorRepository.searchDoctors(query)
+    public List<DoctorOutputDto> searchDoctors(String query, String location) {
+        List<DoctorOutputDto> searchResults = doctorRepository.searchDoctors(query, location)
                 .stream()
                 .map(doctor -> {
                     DoctorOutputDto doctorOutputDto = modelMapper.map(doctor, DoctorOutputDto.class);

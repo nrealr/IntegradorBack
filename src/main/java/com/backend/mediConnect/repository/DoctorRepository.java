@@ -17,11 +17,11 @@ public interface DoctorRepository extends JpaRepository<Doctor, Long> {
     @Query("SELECT DISTINCT d FROM Doctor d " +
             "LEFT JOIN FETCH d.specialty s " +
             "LEFT JOIN FETCH d.features f " +
-            "LEFT JOIN FETCH d.location l " + // Asegúrate de hacer LEFT JOIN con la entidad Location
-            "WHERE LOWER(d.name) LIKE LOWER(CONCAT('%', :query, '%')) " +
+            "LEFT JOIN d.location l " +
+            "WHERE (LOWER(d.name) LIKE LOWER(CONCAT('%', :query, '%')) " +
             "OR LOWER(d.lastname) LIKE LOWER(CONCAT('%', :query, '%')) " +
             "OR LOWER(s.name) LIKE LOWER(CONCAT('%', :query, '%')) " +
-            "OR LOWER(f.name) LIKE LOWER(CONCAT('%', :query, '%')) " +
-            "OR LOWER(l.name) LIKE LOWER(CONCAT('%', :query, '%'))") // Agregada la búsqueda por nombre de ubicación
-    List<Doctor> searchDoctors(@Param("query") String query);
+            "OR LOWER(f.name) LIKE LOWER(CONCAT('%', :query, '%'))) " +
+            "AND LOWER(l.name) LIKE LOWER(CONCAT('%', :location, '%'))")
+    List<Doctor> searchDoctors(@Param("query") String query, @Param("location") String location);
 }
