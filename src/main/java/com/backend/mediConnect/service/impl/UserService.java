@@ -47,13 +47,19 @@ public class UserService implements IUserService {
         user.setName(userDto.getName());
         user.setLastname(userDto.getLastname());
 
+        // Verificar si es el primer usuario en la base de datos
+        boolean isFirstUser = userRepository.count() == 0;
 
-       Role role = roleRepository.findByRoleName(RoleName.REGISTERED)
-                .orElseThrow(()-> new Exception("That role does not exist. Insert valid role"));
-                user.setRole(role);
+        Role role;
+        if (isFirstUser) {
+            role = roleRepository.findByRoleName(RoleName.ADMINISTRATOR)
+                    .orElseThrow(() -> new Exception("The ADMINISTRATOR role does not exist. Insert a valid role"));
+        } else {
+            role = roleRepository.findByRoleName(RoleName.REGISTERED)
+                    .orElseThrow(() -> new Exception("The REGISTERED role does not exist. Insert a valid role"));
+        }
 
-
-
+        user.setRole(role);
         user = userRepository.save(user);
 
         return userMapper.toUserDto(user);
