@@ -68,12 +68,12 @@ public class SecurityConfig {
                 authorizeHttpRequests(authConfig -> {
                     authConfig.requestMatchers("/users/login").permitAll();
                     authConfig.requestMatchers("/users/register").permitAll();
-                    authConfig.requestMatchers("/doctors/register").permitAll();
+//                    authConfig.requestMatchers("/doctors/register").permitAll();
                     authConfig.requestMatchers("/doctors/list").permitAll();
                     authConfig.requestMatchers("/doctors/{id}").permitAll();
                     authConfig.requestMatchers("/doctors/{id}/features").permitAll();
                     authConfig.requestMatchers("/doctors/delete/{id}").permitAll();
-                    authConfig.requestMatchers("/doctors/update/{id}").permitAll();
+//                    authConfig.requestMatchers("/doctors/update/{id}").permitAll();
                     authConfig.requestMatchers("/features/update/{id}").permitAll();
                     authConfig.requestMatchers("/features/delete/{id}").permitAll();
                     authConfig.requestMatchers("/features/add").permitAll();
