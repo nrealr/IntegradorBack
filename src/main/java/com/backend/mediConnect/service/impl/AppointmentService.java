@@ -12,10 +12,13 @@ import com.backend.mediConnect.repository.PatientRepository;
 import com.backend.mediConnect.repository.UserRepository;
 import com.backend.mediConnect.service.IAppointmentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Service
 public class AppointmentService implements IAppointmentService {
 
     @Autowired
@@ -84,6 +87,11 @@ public class AppointmentService implements IAppointmentService {
 
         Appointment updatedAppointment = appointmentRepository.save(appointment);
         return convertToOutputDto(updatedAppointment);
+    }
+
+    @Override
+    public List<Appointment> getAppointmentsByDoctorAndTimeRange(Long doctorId, LocalDateTime startTime, LocalDateTime endTime) {
+        return appointmentRepository.findByDoctorIdAndTimeRange(doctorId, startTime, endTime);
     }
 
     @Override

@@ -9,9 +9,11 @@ import com.backend.mediConnect.repository.AvailabilityRepository;
 import com.backend.mediConnect.repository.DoctorRepository;
 import com.backend.mediConnect.service.IAvailabilityService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+@Service
 public class AvailabilityService implements IAvailabilityService {
 
     @Autowired

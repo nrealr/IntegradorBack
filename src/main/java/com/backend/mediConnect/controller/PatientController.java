@@ -29,11 +29,8 @@ public class PatientController {
     @PostMapping("")
     public ResponseEntity<PatientOutputDto> createPatient(@RequestBody PatientInputDto patientInputDto,
                                                           @RequestParam Long userId) throws Exception {
-
-        UserDto user = userService.findUserById(userId);
-
-
-        PatientOutputDto createdPatient = patientService.createPatient(patientInputDto, user);
+        UserDto userDto = userService.findUserById(userId);
+        PatientOutputDto createdPatient = patientService.createPatient(patientInputDto, userDto);
         return new ResponseEntity<>(createdPatient, HttpStatus.CREATED);
     }
 

@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name="AVAILABILITIES")
 public class Availability {
 
     @Id

@@ -4,6 +4,7 @@ import com.backend.mediConnect.dto.UserDto;
 import jakarta.persistence.*;
 
 @Entity
+@Table(name="PATIENTS")
 public class Patient {
 
     @Id
@@ -37,7 +38,7 @@ public class Patient {
         return user;
     }
 
-    public void setUser(UserDto user) {
+    public void setUser(User user) {
         this.user = user;
     }
 
