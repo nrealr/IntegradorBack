@@ -30,13 +30,15 @@ public class AppointmentService implements IAppointmentService {
     @Autowired
     private PatientRepository patientRepository;
 
+    @Autowired
+    private AvailabilityService availabilityService;
+
     @Override
     public AppointmentOutputDto scheduleAppointment(AppointmentInputDto inputDto) {
         Doctor doctor = doctorRepository.findById(inputDto.getDoctorId())
                 .orElseThrow(() -> new IllegalArgumentException("Doctor not found"));
         Patient patient = patientRepository.findById(inputDto.getPatientId())
                 .orElseThrow(() -> new IllegalArgumentException("Patient not found"));
-
 
         boolean isAvailable = appointmentRepository.findByDoctorIdAndTimeRange(
                 inputDto.getDoctorId(), inputDto.getStartTime(), inputDto.getEndTime()).isEmpty();
@@ -53,6 +55,10 @@ public class AppointmentService implements IAppointmentService {
         appointment.setStatus("scheduled");
 
         Appointment savedAppointment = appointmentRepository.save(appointment);
+
+        // Actualizar disponibilidad
+        availabilityService.updateAvailabilityAfterAppointment(inputDto.getDoctorId(), inputDto.getStartTime(), inputDto.getEndTime());
+
         return convertToOutputDto(savedAppointment);
     }
 
@@ -117,7 +123,5 @@ public class AppointmentService implements IAppointmentService {
         outputDto.setStatus(appointment.getStatus());
         return outputDto;
     }
-
-
-
 }
+

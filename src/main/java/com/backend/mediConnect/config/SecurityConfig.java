@@ -90,6 +90,9 @@ public class SecurityConfig {
                     authConfig.requestMatchers("/locations/register").permitAll();
                     authConfig.requestMatchers("/locations/update/{id}").permitAll();
                     authConfig.requestMatchers("/appointments/list").permitAll();
+                    authConfig.requestMatchers("/availabilities/all").permitAll();
+                    authConfig.requestMatchers("/appointments/schedule").permitAll();
+                    authConfig.requestMatchers("/availabilities/add").permitAll();
 
             authConfig.anyRequest().authenticated();
         })

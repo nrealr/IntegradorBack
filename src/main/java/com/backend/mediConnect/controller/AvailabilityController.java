@@ -14,12 +14,12 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/availability")
+@RequestMapping("/availabilities")
 public class AvailabilityController {
     @Autowired
     private AvailabilityService availabilityService;
 
-    @PostMapping("")
+    @PostMapping("/add")
     public ResponseEntity<AvailabilityOutputDto> createAvailability(@Valid @RequestBody AvailabilityInputDto inputDto) {
         AvailabilityOutputDto createdAvailability = availabilityService.createAvailability(inputDto);
         return new ResponseEntity<>(createdAvailability, HttpStatus.CREATED);
@@ -36,5 +36,17 @@ public class AvailabilityController {
                                                                     @Valid @RequestBody AvailabilityUpdateDto availabilityUpdateDto) {
         Optional<AvailabilityOutputDto> updatedAvailability = availabilityService.updateAvailability(id, availabilityUpdateDto);
         return updatedAvailability.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<AvailabilityOutputDto>> getAllAvailabilities() {
+        List<AvailabilityOutputDto> availabilities = availabilityService.getAllAvailabilities();
+        return new ResponseEntity<>(availabilities, HttpStatus.OK);
+    }
+
+    @GetMapping("/doctor/{doctorId}")
+    public ResponseEntity<List<AvailabilityOutputDto>> getAvailabilitiesByDoctorId(@PathVariable Long doctorId) {
+        List<AvailabilityOutputDto> availabilities = availabilityService.getAvailabilitiesByDoctorId(doctorId);
+        return new ResponseEntity<>(availabilities, HttpStatus.OK);
     }
 }
