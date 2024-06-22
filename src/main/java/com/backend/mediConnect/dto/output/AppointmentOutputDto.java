@@ -1,5 +1,7 @@
 package com.backend.mediConnect.dto.output;
 
+import com.backend.mediConnect.entity.Status;
+
 import java.time.LocalDateTime;
 
 public class AppointmentOutputDto {

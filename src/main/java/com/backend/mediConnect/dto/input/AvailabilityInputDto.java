@@ -17,11 +17,14 @@ public class AvailabilityInputDto {
     @NotNull(message = "EndTime field cannot be null")
     private LocalDateTime endTime;
 
+    private Long statusId;
+
     public AvailabilityInputDto() {
     }
 
-    public AvailabilityInputDto(Long doctorId, LocalDateTime startTime, LocalDateTime endTime) {
+    public AvailabilityInputDto(Long doctorId, Long statusId, LocalDateTime startTime, LocalDateTime endTime) {
         this.doctorId = doctorId;
+        this.statusId = statusId;
         this.startTime = startTime;
         this.endTime = endTime;
     }
@@ -48,5 +51,13 @@ public class AvailabilityInputDto {
 
     public void setEndTime(LocalDateTime endTime) {
         this.endTime = endTime;
+    }
+
+    public Long getStatusId() {
+        return statusId;
+    }
+
+    public void setStatusId(Long statusId) {
+        this.statusId = statusId;
     }
 }

@@ -19,7 +19,7 @@ public class AvailabilityController {
     @Autowired
     private AvailabilityService availabilityService;
 
-    @PostMapping("/add")
+    @PostMapping("")
     public ResponseEntity<AvailabilityOutputDto> createAvailability(@Valid @RequestBody AvailabilityInputDto inputDto) {
         AvailabilityOutputDto createdAvailability = availabilityService.createAvailability(inputDto);
         return new ResponseEntity<>(createdAvailability, HttpStatus.CREATED);
@@ -39,14 +39,19 @@ public class AvailabilityController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<AvailabilityOutputDto>> getAllAvailabilities() {
-        List<AvailabilityOutputDto> availabilities = availabilityService.getAllAvailabilities();
-        return new ResponseEntity<>(availabilities, HttpStatus.OK);
+    public List<AvailabilityOutputDto> getAllAvailabilities() {
+        return availabilityService.getAllAvailabilities();
     }
 
     @GetMapping("/doctor/{doctorId}")
-    public ResponseEntity<List<AvailabilityOutputDto>> getAvailabilitiesByDoctorId(@PathVariable Long doctorId) {
-        List<AvailabilityOutputDto> availabilities = availabilityService.getAvailabilitiesByDoctorId(doctorId);
-        return new ResponseEntity<>(availabilities, HttpStatus.OK);
+    public List<AvailabilityOutputDto> getAvailabilitiesByDoctorId(@PathVariable Long doctorId) {
+        return availabilityService.getAvailabilitiesByDoctorId(doctorId);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> deleteAvailability(@PathVariable Long id) {
+        availabilityService.deleteAvailability(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
+

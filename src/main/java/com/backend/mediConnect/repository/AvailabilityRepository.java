@@ -14,3 +14,4 @@ public interface AvailabilityRepository extends JpaRepository<Availability, Long
 
     List<Availability> findByDoctorId(Long doctorId);
 }
+

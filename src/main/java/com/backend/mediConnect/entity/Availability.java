@@ -19,14 +19,19 @@ public class Availability {
     private LocalDateTime startTime;
     private LocalDateTime endTime;
 
+    @ManyToOne
+    @JoinColumn(name = "status_id")
+    private Status status;
+
     public Availability() {
     }
 
-    public Availability(Long id, Doctor doctor, LocalDateTime startTime, LocalDateTime endTime) {
+    public Availability(Long id, Doctor doctor, LocalDateTime endTime, LocalDateTime startTime, Status status) {
         this.id = id;
         this.doctor = doctor;
-        this.startTime = startTime;
         this.endTime = endTime;
+        this.startTime = startTime;
+        this.status = status;
     }
 
     public Long getId() {
@@ -59,5 +64,13 @@ public class Availability {
 
     public void setEndTime(LocalDateTime endTime) {
         this.endTime = endTime;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
 }

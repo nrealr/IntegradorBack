@@ -2,14 +2,8 @@ package com.backend.mediConnect.service.impl;
 
 import com.backend.mediConnect.dto.input.AppointmentInputDto;
 import com.backend.mediConnect.dto.output.AppointmentOutputDto;
-import com.backend.mediConnect.entity.Appointment;
-import com.backend.mediConnect.entity.Doctor;
-import com.backend.mediConnect.entity.Patient;
-import com.backend.mediConnect.entity.User;
-import com.backend.mediConnect.repository.AppointmentRepository;
-import com.backend.mediConnect.repository.DoctorRepository;
-import com.backend.mediConnect.repository.PatientRepository;
-import com.backend.mediConnect.repository.UserRepository;
+import com.backend.mediConnect.entity.*;
+import com.backend.mediConnect.repository.*;
 import com.backend.mediConnect.service.IAppointmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,7 +25,13 @@ public class AppointmentService implements IAppointmentService {
     private PatientRepository patientRepository;
 
     @Autowired
+    private AvailabilityRepository availabilityRepository;
+
+    @Autowired
     private AvailabilityService availabilityService;
+
+    @Autowired
+    private StatusRepository statusRepository;
 
     @Override
     public AppointmentOutputDto scheduleAppointment(AppointmentInputDto inputDto) {
@@ -52,7 +52,10 @@ public class AppointmentService implements IAppointmentService {
         appointment.setPatient(patient);
         appointment.setStartTime(inputDto.getStartTime());
         appointment.setEndTime(inputDto.getEndTime());
-        appointment.setStatus("scheduled");
+
+        Status scheduledStatus = statusRepository.findByName("scheduled")
+                .orElseThrow(() -> new IllegalArgumentException("Status not found"));
+        appointment.setStatus(scheduledStatus);
 
         Appointment savedAppointment = appointmentRepository.save(appointment);
 
@@ -104,9 +107,37 @@ public class AppointmentService implements IAppointmentService {
     public void cancelAppointment(Long id) {
         Appointment appointment = appointmentRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Appointment not found"));
-        appointment.setStatus("cancelled");
+
+
+        Status cancelledStatus = statusRepository.findByName("cancelled")
+                .orElseThrow(() -> new IllegalArgumentException("Status 'cancelled' not found"));
+
+
+        appointment.setStatus(cancelledStatus);
         appointmentRepository.save(appointment);
+
+
+        List<Availability> availabilities = availabilityRepository.findByDoctorIdAndTimeRange(
+                appointment.getDoctor().getId(), appointment.getStartTime(), appointment.getEndTime());
+
+        for (Availability availability : availabilities) {
+
+            if (availability.getStartTime().equals(appointment.getStartTime()) &&
+                    availability.getEndTime().equals(appointment.getEndTime())) {
+
+
+                Status availableStatus = statusRepository.findByName("available")
+                        .orElseThrow(() -> new IllegalArgumentException("Status 'available' not found"));
+
+
+                availability.setStatus(availableStatus);
+                availabilityRepository.save(availability);
+
+                break;
+            }
+        }
     }
+
 
     @Override
     public void deleteAppointment(Long id) {
@@ -120,8 +151,9 @@ public class AppointmentService implements IAppointmentService {
         outputDto.setPatientId(appointment.getPatient().getId());
         outputDto.setStartTime(appointment.getStartTime());
         outputDto.setEndTime(appointment.getEndTime());
-        outputDto.setStatus(appointment.getStatus());
+        outputDto.setStatus(appointment.getStatus().getName());
         return outputDto;
     }
 }
+
 

@@ -10,15 +10,17 @@ public class AvailabilityUpdateDto {
     private Long id;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
+    private Long statusId;
 
     public AvailabilityUpdateDto() {
     }
 
 
-    public AvailabilityUpdateDto(Long id, LocalDateTime startTime, LocalDateTime endTime) {
+    public AvailabilityUpdateDto(Long id, LocalDateTime endTime, LocalDateTime startTime, Long statusId) {
         this.id = id;
-        this.startTime = startTime;
         this.endTime = endTime;
+        this.startTime = startTime;
+        this.statusId = statusId;
     }
 
     public Long getId() {
@@ -43,5 +45,13 @@ public class AvailabilityUpdateDto {
 
     public void setEndTime(LocalDateTime endTime) {
         this.endTime = endTime;
+    }
+
+    public Long getStatusId() {
+        return statusId;
+    }
+
+    public void setStatusId(Long statusId) {
+        this.statusId = statusId;
     }
 }

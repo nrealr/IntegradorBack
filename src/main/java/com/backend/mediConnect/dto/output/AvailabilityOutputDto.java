@@ -8,15 +8,17 @@ public class AvailabilityOutputDto {
     private Long doctorId;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
+    private String status;
 
     public AvailabilityOutputDto() {
     }
 
-    public AvailabilityOutputDto(Long id, Long doctorId, LocalDateTime startTime, LocalDateTime endTime) {
+    public AvailabilityOutputDto(Long id, Long doctorId, LocalDateTime startTime, LocalDateTime endTime, String status) {
         this.id = id;
         this.doctorId = doctorId;
         this.startTime = startTime;
         this.endTime = endTime;
+        this.status = status;
     }
 
     public Long getId() {
@@ -49,5 +51,13 @@ public class AvailabilityOutputDto {
 
     public void setEndTime(LocalDateTime endTime) {
         this.endTime = endTime;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

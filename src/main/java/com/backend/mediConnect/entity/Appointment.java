@@ -24,12 +24,15 @@ public class Appointment {
 
     private LocalDateTime startTime;
     private LocalDateTime endTime;
-    private String status = "scheduled";
+
+    @ManyToOne
+    @JoinColumn(name = "status_id")
+    private Status status;
 
     public Appointment() {
     }
 
-    public Appointment(Long id, Doctor doctor, Patient patient, LocalDateTime startTime, LocalDateTime endTime, String status) {
+    public Appointment(Long id, Doctor doctor, Patient patient, LocalDateTime startTime, LocalDateTime endTime, Status status) {
         this.id = id;
         this.doctor = doctor;
         this.patient = patient;
@@ -78,11 +81,11 @@ public class Appointment {
         this.endTime = endTime;
     }
 
-    public String getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 }

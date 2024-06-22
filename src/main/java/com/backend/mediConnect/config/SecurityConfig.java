@@ -93,6 +93,8 @@ public class SecurityConfig {
                     authConfig.requestMatchers("/availabilities/all").permitAll();
                     authConfig.requestMatchers("/appointments/schedule").permitAll();
                     authConfig.requestMatchers("/availabilities/add").permitAll();
+                    authConfig.requestMatchers("/availabilities/delete/{id}").permitAll();
+                    authConfig.requestMatchers("/appointments/{id}/cancel").permitAll();
 
             authConfig.anyRequest().authenticated();
         })
