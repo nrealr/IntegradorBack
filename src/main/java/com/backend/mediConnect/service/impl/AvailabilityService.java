@@ -13,6 +13,7 @@ import com.backend.mediConnect.service.IAvailabilityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -162,6 +163,33 @@ public class AvailabilityService implements IAvailabilityService {
         dto.setEndTime(availability.getEndTime());
         dto.setStatus(availability.getStatus().getName());
         return dto;
+    }
+
+    @Override
+    public List<Availability> getTakenTimeSlots(Long doctorId, LocalDate date) {
+        return availabilityRepository.findByDoctorIdAndDateAndStatus(doctorId, date, "reserved");
+    }
+
+
+    @Override
+    public List<LocalDate> getAvailableDaysByDoctorId(Long doctorId) {
+        List<Availability> availabilities = availabilityRepository.findByDoctorId(doctorId);
+
+        List<LocalDate> availableDates = availabilities.stream()
+                .map(availability -> availability.getStartTime().toLocalDate())
+                .distinct() // Obtener fechas únicas
+                .collect(Collectors.toList());
+
+        return availableDates;
+    }
+
+    @Override
+    public List<AvailabilityOutputDto> getAvailabilitiesByDoctorIdAndDate(Long doctorId, LocalDate date) {
+        List<Availability> availabilities = availabilityRepository.findByDoctorIdAndDate(doctorId, date);
+
+        return availabilities.stream()
+                .map(this::mapToAvailabilityOutputDto)
+                .collect(Collectors.toList());
     }
 }
 
