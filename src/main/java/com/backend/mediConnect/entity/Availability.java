@@ -16,7 +16,10 @@ public class Availability {
     @JoinColumn(name = "doctor_id")
     private Doctor doctor;
 
+    @Column(name = "start_time", columnDefinition = "DATETIME")
     private LocalDateTime startTime;
+
+    @Column(name = "end_time", columnDefinition = "DATETIME")
     private LocalDateTime endTime;
 
     @ManyToOne
