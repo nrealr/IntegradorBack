@@ -4,9 +4,11 @@ import com.backend.mediConnect.config.jwt.JwtProvider;
 import com.backend.mediConnect.dto.UserDto;
 import com.backend.mediConnect.dto.UserLoginDto;
 import com.backend.mediConnect.dto.output.FeatureOutputDto;
+import com.backend.mediConnect.entity.Patient;
 import com.backend.mediConnect.entity.Role;
 import com.backend.mediConnect.entity.RoleName;
 import com.backend.mediConnect.entity.User;
+import com.backend.mediConnect.repository.PatientRepository;
 import com.backend.mediConnect.repository.RoleRepository;
 import com.backend.mediConnect.repository.UserRepository;
 import com.backend.mediConnect.service.IUserService;
@@ -37,11 +39,14 @@ public class UserService implements IUserService {
     private AuthenticationManager authenticationManager;
     @Autowired
     private RoleRepository roleRepository;
+    @Autowired
+    private PatientRepository patientRepository;
 
 
 
     @Override
     public UserDto create(UserDto userDto) throws Exception {
+        // Mapea y configura el objeto User a partir del DTO recibido
         User user = userMapper.toUser(userDto);
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
         user.setName(userDto.getName());
@@ -60,8 +65,18 @@ public class UserService implements IUserService {
         }
 
         user.setRole(role);
+
+        // Guarda el usuario en la base de datos
         user = userRepository.save(user);
 
+        // Crear y guardar el paciente asociado al usuario recién creado
+        Patient patient = new Patient();
+        patient.setUser(user);
+        patient.setInsuranceProvider("Fonasa");
+
+        patientRepository.save(patient);
+
+        // Devuelve el DTO del usuario creado
         return userMapper.toUserDto(user);
     }
 
