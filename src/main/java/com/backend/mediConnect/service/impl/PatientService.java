@@ -71,9 +71,8 @@ public class PatientService implements IPatientService {
     private PatientOutputDto convertToDto(Patient patient) {
         PatientOutputDto dto = new PatientOutputDto();
         dto.setId(patient.getId());
-        dto.setUserId(patient.getUser().getId()); // Asumiendo que tienes un método getId en la clase User
+        dto.setUserId(patient.getUser().getId());
         dto.setInsuranceProvider(patient.getInsuranceProvider());
-        // Mapear otros campos según sea necesario
         return dto;
     }
 

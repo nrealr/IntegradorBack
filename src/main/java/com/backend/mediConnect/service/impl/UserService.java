@@ -46,13 +46,11 @@ public class UserService implements IUserService {
 
     @Override
     public UserDto create(UserDto userDto) throws Exception {
-        // Mapea y configura el objeto User a partir del DTO recibido
         User user = userMapper.toUser(userDto);
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
         user.setName(userDto.getName());
         user.setLastname(userDto.getLastname());
 
-        // Verificar si es el primer usuario en la base de datos
         boolean isFirstUser = userRepository.count() == 0;
 
         Role role;
@@ -66,17 +64,14 @@ public class UserService implements IUserService {
 
         user.setRole(role);
 
-        // Guarda el usuario en la base de datos
         user = userRepository.save(user);
 
-        // Crear y guardar el paciente asociado al usuario recién creado
         Patient patient = new Patient();
         patient.setUser(user);
         patient.setInsuranceProvider("Fonasa");
 
         patientRepository.save(patient);
 
-        // Devuelve el DTO del usuario creado
         return userMapper.toUserDto(user);
     }
 

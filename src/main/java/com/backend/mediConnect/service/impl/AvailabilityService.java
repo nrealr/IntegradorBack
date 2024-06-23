@@ -117,7 +117,6 @@ public class AvailabilityService implements IAvailabilityService {
 
                 availabilityRepository.delete(availability);
             } else if (availability.getStartTime().isBefore(startTime)) {
-                // Only split into two parts: before the appointment, and during the appointment
 
                 availability.setEndTime(startTime);
                 availability.setStatus(availableStatus);
@@ -177,7 +176,7 @@ public class AvailabilityService implements IAvailabilityService {
 
         List<LocalDate> availableDates = availabilities.stream()
                 .map(availability -> availability.getStartTime().toLocalDate())
-                .distinct() // Obtener fechas únicas
+                .distinct()
                 .collect(Collectors.toList());
 
         return availableDates;

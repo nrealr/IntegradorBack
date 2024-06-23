@@ -13,11 +13,9 @@ import java.util.List;
 @Repository
 public interface AvailabilityRepository extends JpaRepository<Availability, Long> {
 
-    // Método para buscar disponibilidades por doctor, fecha y status
     @Query("SELECT a FROM Availability a WHERE a.doctor.id = :doctorId AND DATE(a.startTime) = :date AND a.status.name = :status")
     List<Availability> findByDoctorIdAndDateAndStatus(@Param("doctorId") Long doctorId, @Param("date") LocalDate date, @Param("status") String status);
 
-    // Otros métodos de consulta
     List<Availability> findByDoctorId(Long doctorId);
 
     @Query("SELECT a FROM Availability a WHERE a.doctor.id = :doctorId AND a.startTime <= :endTime AND a.endTime >= :startTime")
