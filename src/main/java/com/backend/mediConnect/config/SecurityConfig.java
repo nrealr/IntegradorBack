@@ -100,6 +100,7 @@ public class SecurityConfig {
                     authConfig.requestMatchers("/availabilities/taken/{doctorId}/{date}").permitAll();
                     authConfig.requestMatchers("/availabilities/available/{doctorId}/{date}").permitAll();
                     authConfig.requestMatchers("/availabilities/add").permitAll();
+                    authConfig.requestMatchers("/users/by-email/{email}").permitAll();
 
 
             authConfig.anyRequest().authenticated();

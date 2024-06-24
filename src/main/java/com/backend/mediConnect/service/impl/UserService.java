@@ -3,7 +3,6 @@ package com.backend.mediConnect.service.impl;
 import com.backend.mediConnect.config.jwt.JwtProvider;
 import com.backend.mediConnect.dto.UserDto;
 import com.backend.mediConnect.dto.UserLoginDto;
-import com.backend.mediConnect.dto.output.FeatureOutputDto;
 import com.backend.mediConnect.entity.Patient;
 import com.backend.mediConnect.entity.Role;
 import com.backend.mediConnect.entity.RoleName;
@@ -132,5 +131,12 @@ public class UserService implements IUserService {
 
         userDto.setToken(token);
         return userDto;
+    }
+
+    @Override
+    public UserDto getUserByEmail(String email) throws Exception {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new Exception("User not found with email: " + email));
+        return userMapper.toUserDto(user);
     }
 }

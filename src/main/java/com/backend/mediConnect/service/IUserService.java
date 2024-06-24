@@ -15,4 +15,5 @@ public interface IUserService {
     public List<UserDto> getAllUsers();
     public UserDto updateUserDetails(Long userId, String name, String lastname) throws Exception;
 
+    UserDto getUserByEmail(String email) throws Exception;
 }

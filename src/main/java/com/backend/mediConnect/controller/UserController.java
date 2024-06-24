@@ -4,6 +4,7 @@ import com.backend.mediConnect.dto.UpdateRoleDto;
 import com.backend.mediConnect.dto.UserDto;
 import com.backend.mediConnect.dto.UserLoginDto;
 import com.backend.mediConnect.service.IUserService;
+import com.backend.mediConnect.service.impl.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -98,5 +99,10 @@ public class UserController {
     @GetMapping("/area/logged-user")
     public ResponseEntity<?> loggedUser() {
         return new ResponseEntity<>("You are logged, any rol", HttpStatus.OK);
+    }
+
+    @GetMapping("/by-email/{email}")
+    public UserDto getUserByEmail(@PathVariable String email) throws Exception {
+        return iUserService.getUserByEmail(email);
     }
 }

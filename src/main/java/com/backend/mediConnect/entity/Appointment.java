@@ -22,7 +22,10 @@ public class Appointment {
     @JoinColumn(name = "patient_id")
     private Patient patient; // Asumiendo que tienes una clase User
 
+    @Column(name = "start_time", columnDefinition = "DATETIME")
     private LocalDateTime startTime;
+
+    @Column(name = "end_time", columnDefinition = "DATETIME")
     private LocalDateTime endTime;
 
     @ManyToOne
