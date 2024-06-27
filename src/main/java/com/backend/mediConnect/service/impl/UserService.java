@@ -3,10 +3,11 @@ package com.backend.mediConnect.service.impl;
 import com.backend.mediConnect.config.jwt.JwtProvider;
 import com.backend.mediConnect.dto.UserDto;
 import com.backend.mediConnect.dto.UserLoginDto;
-import com.backend.mediConnect.dto.output.FeatureOutputDto;
+import com.backend.mediConnect.entity.Patient;
 import com.backend.mediConnect.entity.Role;
 import com.backend.mediConnect.entity.RoleName;
 import com.backend.mediConnect.entity.User;
+import com.backend.mediConnect.repository.PatientRepository;
 import com.backend.mediConnect.repository.RoleRepository;
 import com.backend.mediConnect.repository.UserRepository;
 import com.backend.mediConnect.service.IUserService;
@@ -37,6 +38,8 @@ public class UserService implements IUserService {
     private AuthenticationManager authenticationManager;
     @Autowired
     private RoleRepository roleRepository;
+    @Autowired
+    private PatientRepository patientRepository;
 
 
 
@@ -47,7 +50,6 @@ public class UserService implements IUserService {
         user.setName(userDto.getName());
         user.setLastname(userDto.getLastname());
 
-        // Verificar si es el primer usuario en la base de datos
         boolean isFirstUser = userRepository.count() == 0;
 
         Role role;
@@ -60,7 +62,14 @@ public class UserService implements IUserService {
         }
 
         user.setRole(role);
+
         user = userRepository.save(user);
+
+        Patient patient = new Patient();
+        patient.setUser(user);
+        patient.setInsuranceProvider("Fonasa");
+
+        patientRepository.save(patient);
 
         return userMapper.toUserDto(user);
     }
@@ -122,5 +131,12 @@ public class UserService implements IUserService {
 
         userDto.setToken(token);
         return userDto;
+    }
+
+    @Override
+    public UserDto getUserByEmail(String email) throws Exception {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new Exception("User not found with email: " + email));
+        return userMapper.toUserDto(user);
     }
 }

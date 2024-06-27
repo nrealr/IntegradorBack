@@ -71,12 +71,12 @@ public class SecurityConfig {
                 authorizeHttpRequests(authConfig -> {
                     authConfig.requestMatchers("/users/login").permitAll();
                     authConfig.requestMatchers("/users/register").permitAll();
-                    authConfig.requestMatchers("/doctors/register").permitAll();
+//                    authConfig.requestMatchers("/doctors/register").permitAll();
                     authConfig.requestMatchers("/doctors/list").permitAll();
                     authConfig.requestMatchers("/doctors/{id}").permitAll();
                     authConfig.requestMatchers("/doctors/{id}/features").permitAll();
                     authConfig.requestMatchers("/doctors/delete/{id}").permitAll();
-                    authConfig.requestMatchers("/doctors/update/{id}").permitAll();
+//                    authConfig.requestMatchers("/doctors/update/{id}").permitAll();
                     authConfig.requestMatchers("/features/update/{id}").permitAll();
                     authConfig.requestMatchers("/features/delete/{id}").permitAll();
                     authConfig.requestMatchers("/features/add").permitAll();
@@ -92,6 +92,19 @@ public class SecurityConfig {
                     authConfig.requestMatchers("/locations/{id}").permitAll();
                     authConfig.requestMatchers("/locations/register").permitAll();
                     authConfig.requestMatchers("/locations/update/{id}").permitAll();
+                    authConfig.requestMatchers("/appointments/list").permitAll();
+                    authConfig.requestMatchers("/availabilities/all").permitAll();
+                    authConfig.requestMatchers("/appointments/schedule").permitAll();
+                    authConfig.requestMatchers("/availabilities/add").permitAll();
+                    authConfig.requestMatchers("/availabilities/delete/{id}").permitAll();
+                    authConfig.requestMatchers("/appointments/{id}/cancel").permitAll();
+                    authConfig.requestMatchers("/availabilities/days/{doctorId}").permitAll();
+                    authConfig.requestMatchers("/availabilities/{doctorId}/{date}").permitAll();
+                    authConfig.requestMatchers("/availabilities/taken/{doctorId}/{date}").permitAll();
+                    authConfig.requestMatchers("/availabilities/available/{doctorId}/{date}").permitAll();
+                    authConfig.requestMatchers("/availabilities/add").permitAll();
+                    authConfig.requestMatchers("/users/by-email/{email}").permitAll();
+
 
             authConfig.anyRequest().authenticated();
         })
