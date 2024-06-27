@@ -77,7 +77,13 @@ public class UserController {
     @PreAuthorize("hasAuthority('REGISTERED') or hasAuthority('ADMINISTRATOR')")
     public ResponseEntity<UserDto> updateUserDetails(@PathVariable Long id, @RequestBody UserDto userDto) {
         try {
-            UserDto updatedUser = iUserService.updateUserDetails(id, userDto.getName(), userDto.getLastname());
+            UserDto updatedUser = iUserService.updateUserDetails(
+                    id,
+                    userDto.getName(),
+                    userDto.getLastname(),
+                    userDto.getPhone(),
+                    userDto.getAddress()
+            );
             return new ResponseEntity<>(updatedUser, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -104,5 +110,16 @@ public class UserController {
     @GetMapping("/by-email/{email}")
     public UserDto getUserByEmail(@PathVariable String email) throws Exception {
         return iUserService.getUserByEmail(email);
+    }
+
+    @PutMapping("/{id}/password")
+    @PreAuthorize("hasAuthority('REGISTERED') or hasAuthority('ADMINISTRATOR')")
+    public ResponseEntity<?> changePassword(@PathVariable Long id, @RequestBody UserLoginDto userLoginDto) {
+        try {
+            iUserService.changePassword(id, userLoginDto.getPassword());
+            return new ResponseEntity<>("Password changed" , HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }
