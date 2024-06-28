@@ -29,8 +29,24 @@ public class UserPreferencesService implements IUserPreferencesService {
     public UserPreferencesDto updateUserSearchHistory(Long userId, List<String> searchHistory) throws Exception {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new Exception("User not found with id: " + userId));
-        user.setSearchHistory(searchHistory);
+
+        List<String> currentSearchHistory = user.getSearchHistory();
+
+        // Ensure that the total size does not exceed 10
+        if (searchHistory.size() > 10) {
+            searchHistory = searchHistory.subList(searchHistory.size() - 10, searchHistory.size());
+        }
+
+        currentSearchHistory.addAll(searchHistory);
+
+        // Keep only the 10 most recent entries
+        if (currentSearchHistory.size() > 10) {
+            currentSearchHistory = currentSearchHistory.subList(currentSearchHistory.size() - 10, currentSearchHistory.size());
+        }
+
+        user.setSearchHistory(currentSearchHistory);
         user = userRepository.save(user);
+
         UserPreferencesDto preferences = new UserPreferencesDto();
         preferences.setSearchHistory(user.getSearchHistory());
         preferences.setFavorites(user.getFavorites());
