@@ -100,7 +100,7 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public UserDto updateUserDetails(Long userId, String name, String lastname) throws Exception {
+    public UserDto updateUserDetails(Long userId, String name, String lastname, String phone, String address) throws Exception {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new Exception("User not found with id: " + userId));
 
@@ -112,6 +112,13 @@ public class UserService implements IUserService {
             user.setLastname(lastname);
         }
 
+        if (phone != null && !phone.trim().isEmpty()) {
+            user.setPhone(phone);
+        }
+
+        if (address != null && !address.trim().isEmpty()) {
+            user.setAddress(address);
+        }
 
         user = userRepository.save(user);
         return userMapper.toUserDto(user);
@@ -138,5 +145,14 @@ public class UserService implements IUserService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new Exception("User not found with email: " + email));
         return userMapper.toUserDto(user);
+    }
+
+    @Override
+    public void changePassword(Long userId, String newPassword) throws Exception {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new Exception("User not found with id: " + userId));
+
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
     }
 }

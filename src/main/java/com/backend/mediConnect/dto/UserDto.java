@@ -21,6 +21,8 @@ public class UserDto {
     private String token;
     private String name;
     private String lastname;
+    private String phone;
+    private String address;
 
     public Long getId() {
         return id;
@@ -76,5 +78,21 @@ public class UserDto {
 
     public void setLastname(String lastname) {
         this.lastname = lastname;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 }

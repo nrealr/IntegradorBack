@@ -13,7 +13,7 @@ public interface IUserService {
     public UserDto findUserById(Long id) throws Exception;
     public UserDto updateUserRole(Long userId, Long roleId) throws Exception;
     public List<UserDto> getAllUsers();
-    public UserDto updateUserDetails(Long userId, String name, String lastname) throws Exception;
-
-    UserDto getUserByEmail(String email) throws Exception;
+    public UserDto updateUserDetails(Long userId, String name, String lastname, String phone, String address) throws Exception;
+    public UserDto getUserByEmail(String email) throws Exception;
+    void changePassword(Long userId, String newPassword) throws Exception;
 }
