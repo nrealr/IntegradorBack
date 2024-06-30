@@ -138,6 +138,13 @@ public class AppointmentService implements IAppointmentService {
         }
     }
 
+    @Override
+    public List<AppointmentOutputDto> getAppointmentsByUserId(Long userId) {
+        List<Appointment> appointments = appointmentRepository.findByPatientId(userId);
+        return appointments.stream()
+                .map(this::convertToOutputDto)
+                .collect(Collectors.toList());
+    }
 
     @Override
     public void deleteAppointment(Long id) {

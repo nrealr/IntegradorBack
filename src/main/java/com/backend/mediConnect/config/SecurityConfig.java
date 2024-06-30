@@ -101,6 +101,7 @@ public class SecurityConfig {
                     authConfig.requestMatchers("/availabilities/available/{doctorId}/{date}").permitAll();
                     authConfig.requestMatchers("/availabilities/add").permitAll();
                     authConfig.requestMatchers("/users/by-email/{email}").permitAll();
+                    authConfig.requestMatchers("/appointments/user/{userId}").permitAll();
 
 
             authConfig.anyRequest().authenticated();
