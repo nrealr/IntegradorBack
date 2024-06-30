@@ -122,4 +122,15 @@ public class UserController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @PutMapping("/resend-welcome-email/{id}")
+    public ResponseEntity<?> resendWelcomeEmail(@PathVariable Long id) {
+        try {
+            iUserService.resendWelcomeEmail(id);
+            return new ResponseEntity<>("Welcome email resent successfully", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 }

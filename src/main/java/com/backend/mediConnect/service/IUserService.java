@@ -16,4 +16,6 @@ public interface IUserService {
     public UserDto updateUserDetails(Long userId, String name, String lastname, String phone, String address) throws Exception;
     public UserDto getUserByEmail(String email) throws Exception;
     void changePassword(Long userId, String newPassword) throws Exception;
+
+    void resendWelcomeEmail(Long userId) throws Exception;
 }

@@ -71,6 +71,7 @@ public class SecurityConfig {
                 authorizeHttpRequests(authConfig -> {
                     authConfig.requestMatchers("/users/login").permitAll();
                     authConfig.requestMatchers("/users/register").permitAll();
+                    authConfig.requestMatchers("/users/resend-welcome-email/{id}").permitAll();
 //                    authConfig.requestMatchers("/doctors/register").permitAll();
                     authConfig.requestMatchers("/doctors/list").permitAll();
                     authConfig.requestMatchers("/doctors/{id}").permitAll();
@@ -104,6 +105,7 @@ public class SecurityConfig {
                     authConfig.requestMatchers("/availabilities/available/{doctorId}/{date}").permitAll();
                     authConfig.requestMatchers("/availabilities/add").permitAll();
                     authConfig.requestMatchers("/users/by-email/{email}").permitAll();
+                    authConfig.requestMatchers("/appointments/user/{userId}").permitAll();
                     authConfig.requestMatchers("/user-preferences/**").permitAll();
 
 

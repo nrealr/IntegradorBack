@@ -16,5 +16,8 @@ public interface IAppointmentService {
     AppointmentOutputDto updateAppointment(Long id, AppointmentInputDto appointmentInputDto);
     List<Appointment> getAppointmentsByDoctorAndTimeRange(Long doctorId, LocalDateTime startTime, LocalDateTime endTime);
     void cancelAppointment(Long id);
+
+    List<AppointmentOutputDto> getAppointmentsByUserId(Long userId);
+
     void deleteAppointment(Long id);
 }

@@ -15,6 +15,7 @@ import com.backend.mediConnect.service.impl.Mapper.UserMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -40,6 +41,10 @@ public class UserService implements IUserService {
     private RoleRepository roleRepository;
     @Autowired
     private PatientRepository patientRepository;
+    @Autowired
+    private EmailService emailService;
+    @Value("${URL_FRONT}")
+    private String urlFront;
 
 
 
@@ -70,6 +75,15 @@ public class UserService implements IUserService {
         patient.setInsuranceProvider("Fonasa");
 
         patientRepository.save(patient);
+
+        // Enviar correo de bienvenida
+        String subject = "Welcome to MediConnect!";
+        String text = "Dear " + user.getName() + " " + user.getLastname() + ",\n\n" +
+                "Thank you for registering with MediConnect. We are glad to have you on board.\n\n" +
+                "Your registered email is: " + user.getEmail() + "\n\n" +
+                "Please click the link below to log in:\n" + urlFront + "/login\n\n" +
+                "Best regards,\nThe MediConnect Team";
+        emailService.sendEmail(user.getEmail(), subject, text);
 
         return userMapper.toUserDto(user);
     }
@@ -154,5 +168,21 @@ public class UserService implements IUserService {
 
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
+    }
+
+    @Override
+    public void resendWelcomeEmail(Long userId) throws Exception {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new Exception("User not found with id: " + userId));
+
+        // Reenviar correo de bienvenida
+        String subject = "Welcome to MediConnect!";
+        String text = "Dear " + user.getName() + " " + user.getLastname() + ",\n\n" +
+                "This is a re-sent welcome email as requested.\n\n" +
+                "Thank you for registering with MediConnect. We are glad to have you on board.\n\n" +
+                "Your registered email is: " + user.getEmail() + "\n\n" +
+                "Please click the link below to log in:\n" + urlFront + "/login\n\n" +
+                "Best regards,\nThe MediConnect Team";
+        emailService.sendEmail(user.getEmail(), subject, text);
     }
 }
