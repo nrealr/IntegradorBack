@@ -40,6 +40,8 @@ public class UserService implements IUserService {
     private RoleRepository roleRepository;
     @Autowired
     private PatientRepository patientRepository;
+    @Autowired
+    private EmailService emailService;
 
 
 
@@ -70,6 +72,11 @@ public class UserService implements IUserService {
         patient.setInsuranceProvider("Fonasa");
 
         patientRepository.save(patient);
+
+        // Enviar correo de bienvenida
+        String subject = "Welcome to MediConnect!";
+        String text = "Dear " + user.getName() + ",\n\nThank you for registering with MediConnect. We are glad to have you on board.\n\nBest regards,\nThe MediConnect Team";
+        emailService.sendEmail(user.getEmail(), subject, text);
 
         return userMapper.toUserDto(user);
     }
