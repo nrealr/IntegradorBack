@@ -169,4 +169,20 @@ public class UserService implements IUserService {
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
     }
+
+    @Override
+    public void resendWelcomeEmail(Long userId) throws Exception {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new Exception("User not found with id: " + userId));
+
+        // Reenviar correo de bienvenida
+        String subject = "Welcome to MediConnect!";
+        String text = "Dear " + user.getName() + " " + user.getLastname() + ",\n\n" +
+                "This is a re-sent welcome email as requested.\n\n" +
+                "Thank you for registering with MediConnect. We are glad to have you on board.\n\n" +
+                "Your registered email is: " + user.getEmail() + "\n\n" +
+                "Please click the link below to log in:\n" + urlFront + "/login\n\n" +
+                "Best regards,\nThe MediConnect Team";
+        emailService.sendEmail(user.getEmail(), subject, text);
+    }
 }

@@ -68,6 +68,7 @@ public class SecurityConfig {
                 authorizeHttpRequests(authConfig -> {
                     authConfig.requestMatchers("/users/login").permitAll();
                     authConfig.requestMatchers("/users/register").permitAll();
+                    authConfig.requestMatchers("/users/resend-welcome-email/{id}").permitAll();
 //                    authConfig.requestMatchers("/doctors/register").permitAll();
                     authConfig.requestMatchers("/doctors/list").permitAll();
                     authConfig.requestMatchers("/doctors/{id}").permitAll();
