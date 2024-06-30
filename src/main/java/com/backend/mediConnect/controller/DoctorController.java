@@ -147,10 +147,9 @@ public class DoctorController {
 
 
     @GetMapping("/search")
-    public ResponseEntity<List<DoctorOutputDto>> searchDoctors(@RequestParam String query, @RequestParam String location){
-
-        return new ResponseEntity<>(doctorService.searchDoctors(query, location), HttpStatus.OK);
-
+    public ResponseEntity<List<DoctorOutputDto>> searchDoctors(@RequestParam String query, @RequestParam String location) {
+        List<DoctorOutputDto> results = doctorService.searchDoctors(query, location);
+        return new ResponseEntity<>(results, HttpStatus.OK);
     }
 
 

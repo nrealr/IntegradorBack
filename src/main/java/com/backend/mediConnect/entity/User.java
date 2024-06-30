@@ -9,6 +9,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+
 @Entity
 @Table(name="USERS")
 public class User implements UserDetails {
@@ -24,7 +25,13 @@ public class User implements UserDetails {
     private Role role;
     private String name;
     private String lastname;
+    private String phone;
+    private String address;
+    @ElementCollection(fetch = FetchType.EAGER)
+    private List<String> searchHistory = new ArrayList<>();
 
+    @ElementCollection(fetch = FetchType.EAGER)
+    private List<Long> favorites = new ArrayList<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -106,5 +113,37 @@ public class User implements UserDetails {
 
     public void setLastname(String lastname) {
         this.lastname = lastname;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public List<String> getSearchHistory() {
+        return searchHistory;
+    }
+
+    public void setSearchHistory(List<String> searchHistory) {
+        this.searchHistory = searchHistory;
+    }
+
+    public List<Long> getFavorites() {
+        return favorites;
+    }
+
+    public void setFavorites(List<Long> favorites) {
+        this.favorites = favorites;
     }
 }

@@ -223,28 +223,28 @@ public class DoctorService implements IDoctorService {
 
 
     @Override
+    @Transactional
     public List<DoctorOutputDto> searchDoctors(String query, String location) {
-        List<DoctorOutputDto> searchResults = doctorRepository.searchDoctors(query, location)
-                .stream()
+        String[] keywords = query.split("\\s+");
+        List<Doctor> searchResults;
+
+        if (keywords.length == 1) {
+            searchResults = doctorRepository.searchDoctors(keywords[0], location);
+        } else {
+            // Supongamos que sólo quieres manejar hasta dos palabras clave por simplicidad.
+            searchResults = doctorRepository.searchDoctorsWithMultipleKeywords(keywords[0], keywords[1], location);
+        }
+
+        List<DoctorOutputDto> resultDtos = searchResults.stream()
                 .map(doctor -> {
                     DoctorOutputDto doctorOutputDto = modelMapper.map(doctor, DoctorOutputDto.class);
-                    doctorOutputDto.setSpecialtyId(doctor.getSpecialty().getId()); // Aquí asignamos el ID de la especialidad
-
-                    Optional<Doctor> optionalDoctorDb = doctorRepository.findById(doctor.getId()); // Aquí va a buscar el doctor encontrado a la bdd para traer todos los features que le corresponden
-
-                    Set<FeatureOutputDto> featureIds = optionalDoctorDb.map(d -> d.getFeatures().stream()
-                                    .map(feature -> new FeatureOutputDto(feature.getId(), feature.getName(), feature.getIcon()))
-                                    .collect(Collectors.toSet()))
-                            .orElse(Collections.emptySet()); // Asignando las featureIds o dejando una colección vacía en caso de no tener ninguna
-
-                    doctorOutputDto.setFeatures(featureIds);
-
+                    doctorOutputDto.setSpecialtyId(doctor.getSpecialty().getId());
+                    doctorOutputDto.setLocationId(doctor.getLocation().getId());
                     return doctorOutputDto;
                 })
-                .collect(Collectors.toList()); // Cambiado para usar collect en vez de toList
+                .collect(Collectors.toList());
 
-        LOGGER.info("Search Result: {}", jsonPrinter.toString(searchResults));
-
-        return searchResults;
+        LOGGER.info("Search Result: {}", jsonPrinter.toString(resultDtos));
+        return resultDtos;
     }
 }
