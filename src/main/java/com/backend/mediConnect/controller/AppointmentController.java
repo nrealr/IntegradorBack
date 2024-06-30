@@ -63,4 +63,9 @@ public class AppointmentController {
         appointmentService.cancelAppointment(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    @GetMapping("/user/{userId}")
+    public List<AppointmentOutputDto> getAppointmentsByUserId(@PathVariable Long userId) {
+        return appointmentService.getAppointmentsByUserId(userId);
+    }
 }
