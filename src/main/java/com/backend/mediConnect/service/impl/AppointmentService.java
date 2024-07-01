@@ -32,6 +32,8 @@ public class AppointmentService implements IAppointmentService {
 
     @Autowired
     private StatusRepository statusRepository;
+    @Autowired
+    private EmailService emailService;
 
     @Override
     public AppointmentOutputDto scheduleAppointment(AppointmentInputDto inputDto) {
@@ -62,7 +64,26 @@ public class AppointmentService implements IAppointmentService {
         // Actualizar disponibilidad
         availabilityService.updateAvailabilityAfterAppointment(inputDto.getDoctorId(), inputDto.getStartTime(), inputDto.getEndTime());
 
+        // Enviar correo de confirmación
+        sendAppointmentConfirmationEmail(patient, doctor, savedAppointment);
+
         return convertToOutputDto(savedAppointment);
+    }
+
+    private void sendAppointmentConfirmationEmail(Patient patient, Doctor doctor, Appointment appointment) {
+        String subject = "Appointment Confirmation";
+        String text = "Dear " + patient.getUser().getName() + " " + patient.getUser().getLastname() + ",\n\n" +
+                "Your appointment with Dr. " + doctor.getName() + " " + doctor.getLastname() + " " +
+                "has been scheduled successfully.\n\n" +
+                "Appointment Details:\n" +
+                "Date: " + appointment.getStartTime().toLocalDate() + "\n" +
+                "Time: " + appointment.getStartTime().toLocalTime() + " - " + appointment.getEndTime().toLocalTime() + "\n" +
+                "Doctor: " + doctor.getName() + " " + doctor.getLastname() + "\n\n" +
+                "Thank you for choosing MediConnect.\n\n" +
+                "Best regards,\n" +
+                "The MediConnect Team";
+
+        emailService.sendEmail(patient.getUser().getEmail(), subject, text);
     }
 
     @Override
@@ -95,7 +116,26 @@ public class AppointmentService implements IAppointmentService {
         appointment.setEndTime(appointmentInputDto.getEndTime());
 
         Appointment updatedAppointment = appointmentRepository.save(appointment);
+
+        // Enviar correo de actualización
+        sendAppointmentUpdateEmail(patient, doctor, updatedAppointment);
         return convertToOutputDto(updatedAppointment);
+    }
+
+    private void sendAppointmentUpdateEmail(Patient patient, Doctor doctor, Appointment appointment) {
+        String subject = "Appointment Update";
+        String text = "Dear " + patient.getUser().getName() + " " + patient.getUser().getLastname() + ",\n\n" +
+                "Your appointment with Dr. " + doctor.getName() + " " + doctor.getLastname() + " " +
+                "has been updated successfully.\n\n" +
+                "Updated Appointment Details:\n" +
+                "Date: " + appointment.getStartTime().toLocalDate() + "\n" +
+                "Time: " + appointment.getStartTime().toLocalTime() + " - " + appointment.getEndTime().toLocalTime() + "\n" +
+                "Doctor: " + doctor.getName() + " " + doctor.getLastname() + "\n\n" +
+                "Thank you for choosing MediConnect.\n\n" +
+                "Best regards,\n" +
+                "The MediConnect Team";
+
+        emailService.sendEmail(patient.getUser().getEmail(), subject, text);
     }
 
     @Override
@@ -136,6 +176,24 @@ public class AppointmentService implements IAppointmentService {
                 break;
             }
         }
+        // Enviar correo de cancelación
+        sendAppointmentCancellationEmail(appointment.getPatient(), appointment.getDoctor(), appointment);
+    }
+
+    private void sendAppointmentCancellationEmail(Patient patient, Doctor doctor, Appointment appointment) {
+        String subject = "Appointment Cancellation";
+        String text = "Dear " + patient.getUser().getName() + " " + patient.getUser().getLastname() + ",\n\n" +
+                "We regret to inform you that your appointment with Dr. " + doctor.getName() + " " + doctor.getLastname() + " " +
+                "has been cancelled.\n\n" +
+                "Appointment Details:\n" +
+                "Date: " + appointment.getStartTime().toLocalDate() + "\n" +
+                "Time: " + appointment.getStartTime().toLocalTime() + " - " + appointment.getEndTime().toLocalTime() + "\n" +
+                "Doctor: " + doctor.getName() + " " + doctor.getLastname() + "\n\n" +
+                "If you have any questions, please contact us.\n\n" +
+                "Best regards,\n" +
+                "The MediConnect Team";
+
+        emailService.sendEmail(patient.getUser().getEmail(), subject, text);
     }
 
     @Override
